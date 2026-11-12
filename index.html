@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E6EAE2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1B1714" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8233A'/%3E%3Cellipse cx='32' cy='32' rx='14' ry='20' transform='rotate(30 32 32)' fill='%23F3F1EA'/%3E%3Cpath d='M26.5 14.5c8 7-5.5 22 11 35' stroke='%23A8233A' stroke-width='3.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Caderno de Preparos</title>
+<style>
+:root{
+  --paper:#E6EAE2; --sheet:#F6F8F3; --ink:#2B211B; --ink2:#5E564D; --ink3:#867E73;
+  --line:#C9D0C3; --line2:#DCE1D6;
+  --cherry:#A8233A; --cherry-soft:#F2DCDF; --on-cherry:#FFFFFF;
+  --leaf:#3F7352; --honey:#A9740F; --roast:#6E3F27;
+  --lcd-bg:#2B211B; --lcd-ink:#F3EFE7; --lcd-dim:#A39887; --lcd-btn:#433730;
+  --press-bg:#2B211B; --press-ink:#F3EFE7;
+  --s1:#A8233A; --s2:#2A78D6; --s3:#12946B;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1B1714; --sheet:#25201C; --ink:#EEE8DF; --ink2:#B5AC9F; --ink3:#8A8175;
+    --line:#3D352F; --line2:#2F2925;
+    --cherry:#E35D71; --cherry-soft:#3F2329; --on-cherry:#1B1714;
+    --leaf:#86B796; --honey:#E3B450; --roast:#D59569;
+    --lcd-bg:#332A24; --lcd-ink:#F6F1E9; --lcd-dim:#A99D8E; --lcd-btn:#4A3E36;
+    --press-bg:#EEE8DF; --press-ink:#1B1714;
+    --s1:#E2603C; --s2:#3987E5; --s3:#199E70;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1B1714; --sheet:#25201C; --ink:#EEE8DF; --ink2:#B5AC9F; --ink3:#8A8175;
+  --line:#3D352F; --line2:#2F2925;
+  --cherry:#E35D71; --cherry-soft:#3F2329; --on-cherry:#1B1714;
+  --leaf:#86B796; --honey:#E3B450; --roast:#D59569;
+  --lcd-bg:#332A24; --lcd-ink:#F6F1E9; --lcd-dim:#A99D8E; --lcd-btn:#4A3E36;
+  --press-bg:#EEE8DF; --press-ink:#1B1714;
+    --s1:#E2603C; --s2:#3987E5; --s3:#199E70;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Roboto","Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.app{max-width:560px;margin:0 auto;min-height:100vh;position:relative}
+:focus-visible{outline:3px solid var(--cherry);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:4px;
+  padding:calc(env(safe-area-inset-top) + 6px) 12px 6px;background:var(--paper);border-bottom:1px solid transparent}
+.top.scrolled{border-bottom-color:var(--line)}
+#backBtn{grid-column:1} #topAct{grid-column:3}
+.top h1{grid-column:2;margin:0;font-size:20px;font-weight:650;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:44px;height:44px;border:0;background:none;border-radius:22px;display:grid;place-items:center;cursor:pointer}
+.iconbtn svg{width:24px;height:24px}
+.iconbtn[hidden]{display:none}
+.topact{border:0;background:none;color:var(--cherry);font-weight:650;padding:10px 8px;cursor:pointer;min-height:44px}
+
+main{padding:4px 16px calc(96px + env(safe-area-inset-bottom))}
+
+/* bottom tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--paper);border-top:1px solid var(--line);
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;align-items:center}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--ink3);font-size:12px;padding:6px 0;min-height:48px;justify-content:center}
+.tab svg{width:24px;height:24px}
+.tab[aria-current="page"]{color:var(--ink);font-weight:600}
+.tab.new{color:var(--on-cherry)}
+.tab.new span.pill{background:var(--cherry);border-radius:20px;padding:8px 18px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:650}
+.tab.new svg{width:20px;height:20px}
+
+/* text */
+h2.sec-h{font-size:15px;font-weight:650;margin:28px 0 10px;display:flex;align-items:center;gap:10px;color:var(--ink)}
+h2.sec-h .n{width:24px;height:24px;border-radius:12px;border:1.5px solid var(--cherry);color:var(--cherry);display:grid;place-items:center;font-size:13px;font-variant-numeric:tabular-nums}
+h3{font-size:15px;margin:22px 0 8px;font-weight:650}
+.muted{color:var(--ink2)}
+.small{font-size:13px}
+p{margin:0 0 10px}
+.num{font-variant-numeric:tabular-nums}
+
+/* forms */
+.field{display:block;margin:0 0 14px}
+.field > .lab{display:block;font-size:14px;color:var(--ink2);margin:0 0 6px}
+.field > .lab em{font-style:normal;color:var(--ink3);font-size:12px;margin-left:4px}
+input[type=text],input[type=date],input[type=datetime-local],select,textarea{width:100%;background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:46px;font-size:16px}
+textarea{min-height:84px;resize:vertical}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink2) 50%),linear-gradient(135deg,var(--ink2) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+input::placeholder,textarea::placeholder{color:var(--ink3)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.unit{position:relative}
+.unit input{padding-right:40px}
+.unit > span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink3);font-size:14px;pointer-events:none}
+.stepper{display:grid;grid-template-columns:46px 1fr 46px;gap:6px}
+.stepper button{border:1px solid var(--line);background:var(--sheet);border-radius:10px;font-size:20px;cursor:pointer;min-height:46px}
+.stepper input{text-align:center}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--sheet);border-radius:999px;padding:9px 14px;min-height:42px;cursor:pointer;font-size:15px}
+.seg button[aria-pressed="true"]{background:var(--press-bg);color:var(--press-ink);border-color:var(--press-bg)}
+.seg.sc button{min-width:46px;padding:9px 0;flex:1}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--cherry)}
+.derived{display:flex;align-items:baseline;gap:8px;margin:-4px 0 14px;color:var(--ink2);font-size:14px}
+.derived b{color:var(--ink);font-size:18px;font-variant-numeric:tabular-nums}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:1.5px solid var(--cherry);background:var(--cherry);color:var(--on-cherry);
+  font-weight:650;padding:12px 18px;min-height:48px;cursor:pointer;text-decoration:none;font-size:16px}
+.btn.ghost{background:transparent;color:var(--cherry)}
+.btn.quiet{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.block{display:flex;width:100%}
+.btn.danger{background:transparent;color:var(--cherry);border-color:transparent;text-decoration:underline;text-underline-offset:3px}
+.btn[disabled]{opacity:.45;cursor:default}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.btns .btn{flex:1 1 auto}
+
+/* timer: the scale display */
+.lcd{background:var(--lcd-bg);color:var(--lcd-ink);border-radius:20px;padding:18px 16px 16px;margin:4px 0 14px}
+.lcd .t{font-size:clamp(56px,19vw,84px);font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;text-align:center;margin:6px 0 10px}
+.lcd .t .dec{font-size:.5em;color:var(--lcd-dim);letter-spacing:0}
+.lcd .sub{text-align:center;min-height:44px;font-size:16px}
+.lcd .sub small{display:block;color:var(--lcd-dim);font-size:14px;margin-top:2px}
+.lcd .acts{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.lcd .acts.two{grid-template-columns:3fr 2fr}
+.lcd button{border:0;border-radius:14px;min-height:60px;font-size:18px;font-weight:650;cursor:pointer}
+.lcd .go{background:var(--cherry);color:var(--on-cherry)}
+.lcd .alt{background:var(--lcd-btn);color:var(--lcd-ink)}
+.lcd .reset{background:none;color:var(--lcd-dim);min-height:40px;font-size:14px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+
+/* pours editor */
+.pours{border:1px solid var(--line);border-radius:14px;background:var(--sheet);padding:4px 10px 10px}
+.pr{display:grid;grid-template-columns:62px 1fr 1fr 40px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line2)}
+.pr:last-of-type{border-bottom:0}
+.pr.head{font-size:12px;color:var(--ink3);padding:8px 0 2px;border-bottom:0}
+.pr .pn{font-variant-numeric:tabular-nums;font-weight:600}
+.pr .pn small{display:block;font-weight:400;font-size:11px;color:var(--ink3)}
+.pr input{min-height:42px;padding:8px 10px;text-align:center}
+.pr .unit input{padding-right:24px}
+.pr .unit > span{right:9px}
+.pr .x{border:0;background:none;color:var(--ink3);font-size:22px;cursor:pointer;min-height:42px}
+.pours .add{margin-top:6px;border:1px dashed var(--line);background:none;border-radius:10px;width:100%;min-height:44px;color:var(--ink2);cursor:pointer}
+
+/* bean card inside form */
+.beancard{border-left:3px solid var(--cherry);padding:4px 0 4px 12px;margin:-2px 0 14px;font-size:14px;color:var(--ink2)}
+.beancard b{color:var(--ink);font-weight:600}
+.beancard .rest{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* lists */
+.chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 13px;font-size:14px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--press-bg);color:var(--press-ink);border-color:var(--press-bg)}
+.day{font-size:13px;color:var(--ink3);margin:18px 0 4px}
+.brew{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;text-decoration:none;padding:12px 0;border-bottom:1px solid var(--line2);position:relative}
+.cmp .brew{grid-template-columns:30px 1fr auto}
+.brew .sel{display:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--line)}
+.cmp .brew .sel{display:block}
+.brew[aria-selected="true"] .sel{background:var(--cherry);border-color:var(--cherry);box-shadow:inset 0 0 0 3px var(--paper)}
+.b-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.b-name{font-weight:600;font-size:17px}
+.b-time{font-size:13px;color:var(--ink3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.b-meta{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:14px;color:var(--ink2);margin-top:3px;font-variant-numeric:tabular-nums}
+.b-foot{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:13px;color:var(--ink3)}
+.b-score{font-size:28px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;text-align:right;min-width:52px}
+.b-score small{display:block;font-size:12px;font-weight:400;color:var(--ink3);margin-top:3px}
+.b-pend{font-size:13px;color:var(--cherry);border:1px solid var(--cherry);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.tag{font-size:12px;border-radius:6px;padding:2px 7px;background:var(--line2);color:var(--ink2)}
+
+.bean{display:block;text-decoration:none;padding:12px 0;border-bottom:1px solid var(--line2)}
+.bean .bn{font-weight:600;font-size:17px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.bean .bn span{font-weight:400;font-size:13px;color:var(--ink3);white-space:nowrap}
+.bean .bm{font-size:14px;color:var(--ink2);margin-top:2px}
+.status{font-size:12px;border-radius:6px;padding:2px 7px;border:1px solid var(--line);color:var(--ink2)}
+.status.em-uso{border-color:var(--leaf);color:var(--leaf)}
+.status.congelado{border-color:var(--ink3)}
+.status.aguardando{border-style:dashed}
+
+/* extraction bar */
+.xbar{display:inline-flex;gap:3px;vertical-align:middle}
+.xbar i{width:13px;height:7px;border-radius:2px;background:var(--line);display:block}
+.xbar i.on.s{background:var(--honey)} .xbar i.on.b{background:var(--leaf)} .xbar i.on.o{background:var(--roast)}
+.xbar.big i{width:30px;height:10px;border-radius:3px}
+.xseg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.xseg button{border:1px solid var(--line);background:var(--sheet);border-radius:10px;min-height:52px;font-size:13px;line-height:1.15;cursor:pointer;padding:4px 2px}
+.xseg button[data-v="-2"][aria-pressed="true"],.xseg button[data-v="-1"][aria-pressed="true"]{background:var(--honey);border-color:var(--honey);color:#fff}
+.xseg button[data-v="0"][aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.xseg button[data-v="1"][aria-pressed="true"],.xseg button[data-v="2"][aria-pressed="true"]{background:var(--roast);border-color:var(--roast);color:#fff}
+
+/* key-value summary */
+.kv{display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:0;margin:0;border-top:1px solid var(--line2)}
+.kv dt,.kv dd{margin:0;padding:9px 0;border-bottom:1px solid var(--line2);font-size:15px}
+.kv dt{color:var(--ink2);padding-right:10px}
+.kv dd{font-variant-numeric:tabular-nums}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}
+.big3 div{padding:10px 0}
+.big3 b{display:block;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.big3 span{font-size:13px;color:var(--ink2)}
+.ptable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:15px;margin:4px 0 6px}
+.ptable th{font-weight:500;color:var(--ink3);font-size:12px;text-align:left;padding:4px 0}
+.ptable td{padding:7px 0;border-top:1px solid var(--line2)}
+
+/* evaluations */
+.ev{border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 12px;background:var(--sheet)}
+.ev-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ev-h .when{font-size:13px;color:var(--ink3)}
+.ev-h .stage{font-weight:600}
+.ev-h .score{font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.ev-x{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:14px;color:var(--ink2)}
+.attrs{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin:8px 0}
+.attr{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--ink2)}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:4px;background:var(--line);display:block}
+.dots i.on{background:var(--ink)}
+.ev p{font-size:15px}
+.ev .lbl{color:var(--ink3);font-size:13px;display:block}
+.ev .edit{border:0;background:none;color:var(--cherry);padding:8px 0 0;cursor:pointer;font-weight:600}
+.scorebox{display:flex;align-items:center;gap:16px}
+.scorebox output{font-size:44px;font-weight:600;font-variant-numeric:tabular-nums;min-width:86px;line-height:1}
+.scorebox input[type=range]{flex:1;accent-color:var(--cherry);height:44px}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.quick button{border:1px dashed var(--line);background:none;border-radius:999px;padding:6px 11px;font-size:13px;color:var(--ink2);cursor:pointer}
+.hint{font-size:13px;color:var(--ink3);margin:-6px 0 12px}
+
+/* radar: perfil sensorial */
+.radar-box{background:var(--sheet);border:1px solid var(--line);border-radius:16px;padding:10px 8px 6px;margin:0 0 12px}
+.radar{display:block;width:100%;height:auto;max-width:400px;margin:0 auto;overflow:visible}
+.radar .rg{fill:none;stroke:var(--line2);stroke-width:1}
+.radar .rg.out{stroke:var(--line)}
+.radar .ra{stroke:var(--line2);stroke-width:1}
+.radar .rn{font-size:10px;fill:var(--ink3)}
+.radar .rl{font-size:13px;fill:var(--ink2)}
+.radar.cpt .rl{font-size:15px}
+.radar.cpt .rn{font-size:11.5px}
+.radar .rl.off{fill:var(--ink3)}
+.radar .rv{font-weight:650;fill:var(--ink)}
+.rd-p{fill-opacity:.12;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.rd-p.s1{stroke:var(--s1);fill:var(--s1)}
+.rd-p.s2{stroke:var(--s2);fill:var(--s2);stroke-dasharray:7 4}
+.rd-p.s3{stroke:var(--s3);fill:var(--s3);stroke-dasharray:2 4}
+.rd-m{stroke:var(--sheet);stroke-width:2}
+.rd-m.m1{fill:var(--s1)} .rd-m.m2{fill:var(--s2)} .rd-m.m3{fill:var(--s3)}
+.radar .hit{fill:transparent;cursor:pointer}
+.rleg{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:center;font-size:13px;color:var(--ink2);padding:2px 6px 6px}
+.rleg span{display:inline-flex;align-items:center;gap:6px}
+.rleg svg{flex:0 0 auto}
+.rcap{font-size:13px;color:var(--ink3);text-align:center;padding:0 8px 6px}
+.radar-box figcaption{margin:0}
+figure{margin:0}
+.tip{position:fixed;z-index:80;background:var(--ink);color:var(--paper);font-size:13px;line-height:1.3;padding:6px 10px;border-radius:8px;pointer-events:none;max-width:240px}
+.tip[hidden]{display:none}
+/* avaliação: perfil com radar ao vivo */
+.radar-live{position:sticky;top:calc(env(safe-area-inset-top) + 56px);z-index:5;background:var(--paper);padding:2px 0 6px}
+.radar-live .radar-box{margin:0;padding:6px 8px 2px}
+.radar-live .radar{max-width:310px}
+.arow{display:grid;grid-template-columns:minmax(0,1fr) 208px;align-items:center;gap:10px;padding:5px 0}
+.arow .al{font-size:15px}
+.seg.pick{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.seg.pick button{min-width:0;min-height:40px;padding:0;border-radius:9px;font-size:15px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.seg.pick button.fill{background:var(--press-bg);border-color:var(--press-bg);color:var(--press-ink)}
+.gloss{margin:10px 0 18px;font-size:14px;color:var(--ink2)}
+.gloss summary{cursor:pointer;min-height:40px;display:flex;align-items:center;color:var(--cherry);font-weight:600}
+.gloss dl{margin:4px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+.gloss dt{color:var(--ink);font-weight:600}
+.gloss dd{margin:0}
+.attr b{margin-left:7px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.attr > span:last-child{display:inline-flex;align-items:center}
+
+/* compare */
+.cmpbar{position:fixed;left:0;right:0;bottom:calc(68px + env(safe-area-inset-bottom));z-index:25;padding:0 16px}
+.cmpbar .in{max-width:528px;margin:0 auto;display:flex;gap:8px;background:var(--ink);color:var(--paper);border-radius:14px;padding:8px 8px 8px 14px;align-items:center}
+.cmpbar .in span{flex:1;font-size:14px}
+.cmpbar .btn{min-height:42px;padding:8px 14px}
+.ctable{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.ctable th,.ctable td{padding:8px 6px;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}
+.ctable th{color:var(--ink2);font-weight:500;width:28%}
+.ctable thead td{font-weight:600;font-size:15px}
+.ctable tr.diff td{background:var(--cherry-soft)}
+.ctable tr.sec th{color:var(--ink);font-weight:650;padding-top:16px;border-bottom:0}
+.cwrap{overflow-x:auto;margin:0 -16px;padding:0 16px}
+
+/* misc */
+.empty{text-align:left;padding:32px 0 8px}
+.empty h2{font-size:22px;margin:0 0 8px;font-weight:650;letter-spacing:-.01em}
+.banner{border:1px solid var(--line);border-left:3px solid var(--honey);border-radius:10px;padding:10px 12px;margin:8px 0 6px;font-size:14px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.banner.err{border-left-color:var(--cherry)}
+.banner button{border:0;background:none;color:var(--cherry);font-weight:650;cursor:pointer;white-space:nowrap;min-height:40px}
+.listed{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 8px}
+.listed span{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:999px;padding:4px 4px 4px 12px;font-size:14px}
+.listed button{border:0;background:none;width:30px;height:30px;border-radius:15px;cursor:pointer;color:var(--ink3);font-size:18px}
+.addrow{display:grid;grid-template-columns:1fr auto;gap:8px}
+.addrow .btn{min-height:46px;padding:8px 14px}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+
+/* sheet + toast */
+.scrim{position:fixed;inset:0;background:rgba(20,15,12,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--paper);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:20px 16px calc(16px + env(safe-area-inset-bottom));max-height:85vh;overflow:auto}
+.sheet h2{margin:0 0 8px;font-size:19px}
+.sheet .btns{flex-direction:column}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:70;background:var(--ink);color:var(--paper);
+  padding:10px 16px;border-radius:12px;font-size:15px;max-width:calc(100% - 32px);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top" id="top">
+    <button class="iconbtn" id="backBtn" aria-label="Voltar" hidden data-act="back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <h1 id="title">Preparos</h1>
+    <div id="topAct"></div>
+  </header>
+  <main id="view" tabindex="-1"></main>
+</div>
+<nav class="tabs" aria-label="Navegação">
+  <div class="tabs-in">
+    <a class="tab" href="#/preparos" data-tab="preparos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h9"/></svg>Preparos</a>
+    <a class="tab new" href="#/novo" data-tab="novo"><span class="pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Novo</span></a>
+    <a class="tab" href="#/cafes" data-tab="cafes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)"/><path d="M9.5 4.8c3.6 3-2.4 9.4 5 14.4"/></svg>Cafés</a>
+    <a class="tab" href="#/mais" data-tab="mais">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18" cy="12" r="1.7"/></svg>Mais</a>
+  </div>
+</nav>
+<div id="cmpbar"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<div id="sheetRoot"></div>
+<input type="file" id="fileIn" accept="application/json,.json" class="sr" tabindex="-1" aria-hidden="true">
+
+<script>
+'use strict';
+/* ================= utilidades ================= */
+const APP='caderno-preparos', KEY=APP+'.v1', DKEY=APP+'.rascunho', DAY=864e5;
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const clone=o=>JSON.parse(JSON.stringify(o));
+function num(v){ if(v===null||v===undefined) return null; const s=String(v).trim().replace(/\s/g,'').replace(',','.'); if(s==='') return null; const n=Number(s); return isFinite(n)?n:null; }
+function fmt(n,d=1){ return (n==null||!isFinite(n))?'':Number(n).toLocaleString('pt-BR',{maximumFractionDigits:d}); }
+function fmtT(s){ if(s==null||!isFinite(s)) return ''; const m=Math.floor(s/60), r=Math.floor(s-m*60); return m+':'+String(r).padStart(2,'0'); }
+function parseT(v){ v=String(v??'').trim(); if(!v) return null; if(v.includes(':')){ const [a,b]=v.split(':'); const m=num(a)||0, s=num(b); return s==null?null:m*60+s; } const n=num(v); if(n==null) return null; return n; }
+const pad=n=>String(n).padStart(2,'0');
+function localISODate(d=new Date()){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function toLocalInput(ms){ const d=new Date(ms); return localISODate(d)+'T'+pad(d.getHours())+':'+pad(d.getMinutes()); }
+function parseISODate(s){ if(!s) return null; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function daysOff(roast, at){ const r=parseISODate(roast); if(!r) return null; const a=new Date(at); a.setHours(0,0,0,0); return Math.round((a-r)/DAY); }
+function dateBR(s){ const d=parseISODate(s); return d?d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}):''; }
+function dtBR(ms){ const d=new Date(ms); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function hm(ms){ return new Date(ms).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function dayLabel(ms){
+  const d=new Date(ms); d.setHours(0,0,0,0); const t=new Date(); t.setHours(0,0,0,0);
+  const diff=Math.round((t-d)/DAY);
+  if(diff===0) return 'Hoje'; if(diff===1) return 'Ontem';
+  const s=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}); return s.charAt(0).toUpperCase()+s.slice(1);
+}
+function short(name){ if(!name) return ''; const m=String(name).match(/\b([A-Z]{1,4}\d{1,3}[A-Z]?)\b/); return m?m[1]:String(name).slice(0,14); }
+function ratioOf(c,a){ return (c>0&&a>0)?a/c:null; }
+function plural(n,s,p){ return n===1?s:(p||s+'s'); }
+
+/* ================= armazenamento ================= */
+let storageOK=true;
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ storageOK=false; return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ storageOK=false; return false; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+(function probe(){ try{ localStorage.setItem(APP+'.t','1'); storageOK=localStorage.getItem(APP+'.t')==='1'; localStorage.removeItem(APP+'.t'); }catch(e){ storageOK=false; } })();
+
+function defaultLists(){ return {
+  moedores:[],
+  metodos:['Hario V60','Timemore B75','AeroPress','Cupping'],
+  filtros:['Hario V60 branco','Cafec Abaca+','Timemore 155','Kalita Wave 155','AeroPress papel','Sem filtro'],
+  aguas:[],
+  sessoes:[],
+}; }
+const TORRAS=['Clara','Média-clara','Média','Média-escura','Escura'];
+const PROCESSOS=['Natural','Lavado','Cereja descascado','Honey','Fermentado','Natural fermentado','Fermentação anaeróbica'];
+const STATUS=['Em uso','Fechado','Congelado','Aguardando','Acabou'];
+const ESTADOS=['Ambiente','Descongelado','Congelado'];
+const ORIENT=['Vertical','Horizontal'];
+const AGIT=['Nenhuma','Swirl','Mexer','Swirl e mexer'];
+const MOMENTOS=['Quente','Morno','Frio'];
+const XLAB={'-2':'Muito sub','-1':'Sub','0':'No ponto','1':'Sobre','2':'Muito sobre'};
+/* A ordem é a do radar, em sentido horário a partir do topo: os rótulos longos caem nas diagonais. */
+const ATTR=[['aroma','Aroma'],['docura','Doçura'],['acidez','Acidez'],['corpo','Corpo'],['clareza','Clareza'],['finalizacao','Finalização'],['amargor','Amargor'],['adstringencia','Adstringência']];
+const ATTR_HINT={aroma:'intensidade e qualidade do cheiro, no pó e na xícara',docura:'açúcar percebido: mel, caramelo, fruta madura',acidez:'brilho e vivacidade, sem confundir com azedo',corpo:'peso e textura na boca, do chá ao xarope',clareza:'quanto as notas aparecem separadas e limpas',finalizacao:'duração e qualidade do gosto que fica',amargor:'amargo de fundo; em excesso indica sobre-extração',adstringencia:'secura e aspereza na língua, como chá passado'};
+const AJUSTES=['Moer mais fino','Moer mais grosso','Subir temperatura','Baixar temperatura','Mais agitação','Menos agitação','Aumentar dose','Diminuir dose','Mudar proporção','Manter a receita'];
+
+function seed(){
+  return {v:1, beans:[], brews:[], evals:[], lists:defaultLists(), prefs:{theme:'auto',lastBackup:null,changes:0}};
+}
+function migrate(d){
+  d.beans=Array.isArray(d.beans)?d.beans:[]; d.brews=Array.isArray(d.brews)?d.brews:[]; d.evals=Array.isArray(d.evals)?d.evals:[];
+  const L=defaultLists(); d.lists=Object.assign(L,d.lists||{});
+  d.prefs=Object.assign({theme:'auto',lastBackup:null,changes:0},d.prefs||{}); d.v=1; return d;
+}
+function load(){ const raw=lsGet(KEY); if(raw){ try{ return migrate(JSON.parse(raw)); }catch(e){} } return seed(); }
+let db=load();
+function save(skipCount){ if(!skipCount) db.prefs.changes=(db.prefs.changes||0)+1; db.updatedAt=Date.now(); lsSet(KEY,JSON.stringify(db)); }
+if(!lsGet(KEY)) save(true);
+
+const beanById=id=>db.beans.find(b=>b.id===id);
+const brewById=id=>db.brews.find(b=>b.id===id);
+const evalsOf=id=>db.evals.filter(e=>e.brewId===id).sort((a,b)=>a.criadoEm-b.criadoEm);
+const lastEval=id=>{ const e=evalsOf(id); return e[e.length-1]||null; };
+const brewsOf=beanId=>db.brews.filter(b=>b.beanId===beanId).sort((a,b)=>b.criadoEm-a.criadoEm);
+const snap=b=>b?{nome:b.nome,torrefacao:b.torrefacao,produtor:b.produtor,fazenda:b.fazenda,regiao:b.regiao,variedade:b.variedade,processo:b.processo,torra:b.torra,dataTorra:b.dataTorra}:{};
+const beanOf=br=>beanById(br.beanId)||br.bean||{};
+function usedBy(beanId){ return db.brews.filter(b=>b.beanId===beanId).reduce((s,b)=>s+(num(b.cafe)||0),0); }
+function suggest(list,field){ const s=new Set(db.lists[list]||[]); db.brews.forEach(b=>{ if(b[field]) s.add(b[field]); }); return [...s]; }
+function ey(br){ const t=num(br.tds), c=num(br.cafe); if(!t||!c) return null; let bev=num(br.bebida), est=false; if(!bev){ const a=num(br.aguaG); if(!a) return null; bev=a-2*c; est=true; } return {v:t*bev/c, est}; }
+
+/* ================= rascunho de preparo ================= */
+let DN=null, DE=null, D=null, E=null;
+try{ const r=lsGet(DKEY); if(r) DN=JSON.parse(r); }catch(e){ DN=null; }
+function saveDraft(){ if(D&&D.mode==='new'){ DN=D; lsSet(DKEY,JSON.stringify(DN)); } }
+function clearDraft(){ if(D&&D.mode==='new'){ DN=null; lsDel(DKEY); } else { DE=null; } D=null; }
+function blankDraft(){
+  const inUse=db.beans.find(b=>b.status==='Em uso');
+  return {mode:'new',beanId:inUse?inUse.id:'',estadoGrao:'Ambiente',sessao:'',codigo:'',moedor:db.lists.moedores[0]||'',clique:'',orientacao:'Vertical',
+    metodo:db.lists.metodos[0]||'',filtro:db.lists.filtros[0]||'',enxague:true,agua:'',ppm:'',temp:'93',cafe:'15',aguaG:'250',agitacao:'Swirl',
+    pours:[{t:null,g:50},{t:null,g:150},{t:null,g:250}],tempoTotal:null,bebida:'',tds:'',notas:'',when:'',timer:{start:null,end:null}};
+}
+function draftFrom(b,mode){
+  const d=clone(b); d.mode=mode; d.timer={start:null,end:null};
+  if(mode==='new'){ delete d.id; delete d.criadoEm; delete d.bean; d.editId=null; d.pours=(b.pours||[]).map(p=>({t:null,g:p.g})); d.tempoTotal=null; d.bebida=''; d.tds=''; d.notas=''; d.codigo=''; d.when=''; }
+  else { d.editId=b.id; d.when=toLocalInput(b.criadoEm); if(b.tempoTotal!=null) d.timer={start:1,end:1}; }
+  return d;
+}
+function newDraft(){ const last=[...db.brews].sort((a,b)=>b.criadoEm-a.criadoEm)[0]; return last?draftFrom(last,'new'):blankDraft(); }
+function hasProgress(d){ return d && (d.timer&&d.timer.start || (d.pours||[]).some(p=>p.t!=null) || d.tempoTotal!=null); }
+
+/* ================= interface base ================= */
+let navCount=0, rafId=0, wakeLock=null, cmpMode=false, cmpSel=[], filterBean='all', blind=false, curRoute='';
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),2200); }
+function sheet({title,body='',actions=[]}){
+  const root=$('#sheetRoot');
+  root.innerHTML=`<div class="scrim" data-act="closeSheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT" data-stop="1">
+    <h2 id="shT">${esc(title)}</h2><div class="muted">${body}</div><div class="btns">${actions.map((a,i)=>`<button class="btn ${a.kind||''}" data-sheet="${i}">${esc(a.label)}</button>`).join('')}</div></div></div>`;
+  $$('[data-sheet]',root).forEach(b=>b.addEventListener('click',ev=>{ ev.stopPropagation(); const a=actions[+b.dataset.sheet]; closeSheet(); if(a.fn) a.fn(); }));
+  const f=$('[data-sheet]',root); if(f) f.focus();
+}
+function closeSheet(){ $('#sheetRoot').innerHTML=''; }
+function applyTheme(){ const t=db.prefs.theme; if(t==='light'||t==='dark') document.documentElement.dataset.theme=t; else delete document.documentElement.dataset.theme; }
+applyTheme();
+window.addEventListener('scroll',()=>{ $('#top').classList.toggle('scrolled',scrollY>4); $('#tip').hidden=true; },{passive:true});
+function showTip(t){ const tip=$('#tip'), r=t.getBoundingClientRect(); tip.textContent=t.dataset.tip; tip.hidden=false;
+  const w=tip.offsetWidth, h=tip.offsetHeight; let x=r.left+r.width/2-w/2, y=r.top-h-4; x=Math.max(8,Math.min(x,innerWidth-w-8)); if(y<8) y=r.bottom+4; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+document.addEventListener('pointerover',e=>{ const t=e.target.closest&&e.target.closest('[data-tip]'); if(t) showTip(t); });
+document.addEventListener('pointerout',e=>{ if(e.pointerType==='mouse'&&e.target.closest&&e.target.closest('[data-tip]')) $('#tip').hidden=true; });
+document.addEventListener('pointerdown',e=>{ const t=e.target.closest&&e.target.closest('[data-tip]'); if(t) showTip(t); else $('#tip').hidden=true; });
+
+const segHTML=(f,opts,cur,cls='')=>`<div class="seg ${cls}" data-f="${f}">${opts.map(o=>{ const v=Array.isArray(o)?o[0]:o, l=Array.isArray(o)?o[1]:o; return `<button type="button" data-act="seg" data-v="${esc(v)}" aria-pressed="${String(cur)===String(v)}">${esc(l)}</button>`; }).join('')}</div>`;
+const dl=(id,arr)=>`<datalist id="${id}">${arr.map(v=>`<option value="${esc(v)}">`).join('')}</datalist>`;
+function xbar(v,big){ if(v==null||v==='') return ''; v=+v; return `<span class="xbar ${big?'big':''}" aria-label="Extração: ${XLAB[v]}">${[-2,-1,0,1,2].map(i=>`<i class="${i===v?'on '+(i<0?'s':i>0?'o':'b'):''}"></i>`).join('')}</span>`; }
+function dots(v){ v=+v||0; return `<span class="dots">${[1,2,3,4,5].map(i=>`<i class="${i<=v?'on':''}"></i>`).join('')}</span>`; }
+/* ---------- radar do perfil sensorial ---------- */
+function markSVG(slot,x,y){
+  x=Math.round(x*10)/10; y=Math.round(y*10)/10;
+  if(slot===0) return `<circle cx="${x}" cy="${y}" r="5" class="rd-m m1"/>`;
+  if(slot===1) return `<rect x="${x-4.3}" y="${y-4.3}" width="8.6" height="8.6" rx="1" class="rd-m m2"/>`;
+  return `<path d="M${x} ${y-5.6}L${x+5.6} ${y}L${x} ${y+5.6}L${x-5.6} ${y}Z" class="rd-m m3"/>`;
+}
+function radarSVG(series,multi,opt={}){
+  const R=opt.compact?82:92, W=380, cx=W/2, cy=R+30, H=2*R+62, n=ATTR.length, f=v=>v.toFixed(1);
+  const ang=i=>(-90+i*360/n)*Math.PI/180, pt=(i,v)=>[cx+Math.cos(ang(i))*R*v/5, cy+Math.sin(ang(i))*R*v/5];
+  let g='';
+  for(let r=1;r<=5;r++) g+=`<circle cx="${cx}" cy="${cy}" r="${f(R*r/5)}" class="rg${r===5?' out':''}"/>`;
+  ATTR.forEach((a,i)=>{ const [x,y]=pt(i,5); g+=`<line x1="${cx}" y1="${cy}" x2="${f(x)}" y2="${f(y)}" class="ra"/>`; });
+  const ba=(-90+180/n)*Math.PI/180;
+  [1,3,5].forEach(r=>{ g+=`<text x="${f(cx+Math.cos(ba)*R*r/5)}" y="${f(cy+Math.sin(ba)*R*r/5+3.5)}" class="rn" text-anchor="middle">${r}</text>`; });
+  ATTR.forEach(([k,l],i)=>{
+    const c=Math.cos(ang(i)), s=Math.sin(ang(i)), x=cx+c*(R+12), y=cy+s*(R+12);
+    const anchor=Math.abs(c)<0.2?'middle':(c>0?'start':'end'), dy=s<-0.5?-2:(s>0.5?12:4.5);
+    const rated=series.some(S=>S.vals[k]!=null), v=!multi&&series[0]?series[0].vals[k]:null;
+    g+=`<text x="${f(x)}" y="${f(y+dy)}" text-anchor="${anchor}" class="rl${rated?'':' off'}">${l}${v!=null?` <tspan class="rv">${v}</tspan>`:''}</text>`;
+  });
+  series.forEach(S=>{
+    const pts=ATTR.map(([k],i)=>S.vals[k]!=null?pt(i,S.vals[k]):null).filter(Boolean).map(p=>f(p[0])+','+f(p[1])).join(' ');
+    const n2=pts?pts.split(' ').length:0;
+    if(n2>=3) g+=`<polygon points="${pts}" class="rd-p s${S.slot+1}"/>`; else if(n2===2) g+=`<polyline points="${pts}" class="rd-p s${S.slot+1}" fill="none"/>`;
+  });
+  let marks='', hits='';
+  ATTR.forEach(([k,l],i)=>{
+    const byV={}; series.forEach(S=>{ const v=S.vals[k]; if(v!=null) (byV[v]=byV[v]||[]).push(S); });
+    Object.keys(byV).forEach(v=>{
+      const grp=byV[v], [x,y]=pt(i,+v), px=-Math.sin(ang(i)), py=Math.cos(ang(i));
+      grp.forEach((S,j)=>{ const o=(j-(grp.length-1)/2)*11; marks+=markSVG(S.slot,x+px*o,y+py*o); });
+      hits+=`<circle cx="${f(x)}" cy="${f(y)}" r="15" class="hit" data-tip="${esc(l+' '+v+' de 5'+(multi?': '+grp.map(S=>S.label).join(', '):''))}"/>`;
+    });
+  });
+  const aria='Perfil sensorial. '+series.map(S=>(multi?S.label+': ':'')+ATTR.filter(([k])=>S.vals[k]!=null).map(([k,l])=>l+' '+S.vals[k]).join(', ')).join('. ');
+  return `<svg viewBox="0 0 ${W} ${H}" class="radar${opt.compact?' cpt':''}" role="img" aria-label="${esc(aria)}">${g}${marks}${hits}</svg>`;
+}
+function radarBox(series,opt={}){
+  series=series.map((S,i)=>({slot:S.slot!=null?S.slot:i,label:S.label||'',vals:S.vals||{}}));
+  const multi=series.length>1, drawn=series.filter(S=>ATTR.some(([k])=>S.vals[k]!=null));
+  if(!drawn.length&&!opt.live) return '';
+  const leg=multi?`<div class="rleg">${drawn.map(S=>`<span><svg viewBox="0 0 30 14" width="30" height="14" aria-hidden="true"><line x1="1" y1="7" x2="29" y2="7" class="rd-p s${S.slot+1}"/>${markSVG(S.slot,15,7)}</svg>${esc(S.label)}</span>`).join('')}</div>`:'';
+  return `<figure class="radar-box">${leg}${radarSVG(drawn,multi,opt)}${opt.caption?`<figcaption class="rcap">${esc(opt.caption)}</figcaption>`:''}</figure>`;
+}
+function liveRadar(){ const n=ATTR.filter(([k])=>E[k]!=null).length; return radarBox([{label:E.momento,vals:E}],{compact:true,live:true,caption:n<3?'Marque três ou mais atributos para formar o desenho.':''}); }
+const statusCls=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');
+
+/* ================= telas ================= */
+function vList(){
+  const brews=[...db.brews].sort((a,b)=>b.criadoEm-a.criadoEm);
+  const beansWith=[...new Set(brews.map(b=>b.beanId))].map(id=>[id,(beanById(id)||(brews.find(b=>b.beanId===id)||{}).bean||{}).nome||'Café']);
+  if(filterBean!=='all' && !beansWith.some(([id])=>id===filterBean)) filterBean='all';
+  const shown=filterBean==='all'?brews:brews.filter(b=>b.beanId===filterBean);
+  let html='';
+  if(!storageOK) html+=`<div class="banner err"><span>Este modo de abertura não salva dados. Exporte um backup antes de fechar ou instale o app.</span><button data-act="goMore">Ver</button></div>`;
+  const since=db.prefs.lastBackup?Math.floor((Date.now()-db.prefs.lastBackup)/DAY):null;
+  if(db.prefs.changes>0 && (since===null?brews.length>=3:since>=7)) html+=`<div class="banner"><span>${since===null?'Os dados ficam só neste aparelho e ainda não há backup.':'Último backup há '+since+' dias.'}</span><button data-act="exportJSON">Fazer backup</button></div>`;
+  if(!brews.length){
+    return {title:'Preparos',tab:'preparos',html:html+`<div class="empty"><h2>Nenhum preparo registrado</h2><p class="muted">Registre a receita enquanto prepara. Depois de provar, acrescente a avaliação: dá para avaliar quente, morno e frio.</p><div class="btns"><a class="btn" href="#/novo">Registrar primeiro preparo</a>${db.beans.length?'':'<a class="btn quiet" href="#/mais">Importar um backup</a>'}</div></div>`};
+  }
+  if(beansWith.length>1) html+=`<div class="chips" role="group" aria-label="Filtrar por café"><button class="chip" data-act="filter" data-id="all" aria-pressed="${filterBean==='all'}">Todos</button>${beansWith.map(([id,n])=>`<button class="chip" data-act="filter" data-id="${id}" aria-pressed="${filterBean===id}">${esc(n)}</button>`).join('')}</div>`;
+  let lastDay='';
+  html+=`<div class="${cmpMode?'cmp':''}" id="blist">`;
+  shown.forEach(b=>{
+    const dl_=dayLabel(b.criadoEm); if(dl_!==lastDay){ html+=`<div class="day">${dl_}</div>`; lastDay=dl_; }
+    const bean=beanOf(b), le=lastEval(b.id), r=ratioOf(num(b.cafe),num(b.aguaG)), rest=daysOff(bean.dataTorra||(b.bean||{}).dataTorra,b.criadoEm);
+    const meta=[ `${esc(short(b.moedor))} ${esc(b.clique||'')}${b.orientacao==='Horizontal'?' (horiz.)':''}`.trim(),
+      esc([short(b.metodo),b.filtro].filter(Boolean).join(', ')),
+      (b.cafe&&b.aguaG)?`${fmt(num(b.cafe))} g para ${fmt(num(b.aguaG),0)} g`:'', r?`1:${fmt(r)}`:'', b.tempoTotal!=null?fmtT(b.tempoTotal):'', rest!=null?`${rest} ${plural(rest,'dia')}`:'' ].filter(Boolean);
+    const sel=cmpSel.includes(b.id);
+    html+=`<a class="brew" href="#/preparo/${b.id}" data-act="row" data-id="${b.id}" aria-selected="${sel}">
+      <span class="sel" aria-hidden="true"></span>
+      <div><div class="b-top"><span class="b-name">${esc(bean.nome||'Café')}</span><span class="b-time">${hm(b.criadoEm)}</span></div>
+      <div class="b-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>
+      ${(le&&le.extracao!=null)||b.sessao||b.codigo?`<div class="b-foot">${le?xbar(le.extracao):''}${le&&le.extracao!=null?`<span>${XLAB[le.extracao]}</span>`:''}${b.sessao?`<span class="tag">${esc(b.sessao)}</span>`:''}${b.codigo?`<span class="tag">Código ${esc(b.codigo)}</span>`:''}</div>`:''}</div>
+      ${le&&le.nota!=null?`<div class="b-score">${fmt(le.nota)}<small>de 10</small></div>`:`<span class="b-pend">Avaliar</span>`}
+    </a>`;
+  });
+  html+='</div>';
+  return {title:'Preparos',tab:'preparos',action:{label:cmpMode?'Cancelar':'Comparar',act:'toggleCmp'},html,after:renderCmpBar};
+}
+function renderCmpBar(){
+  const bar=$('#cmpbar');
+  if(!cmpMode||curRoute!=='list'){ bar.innerHTML=''; return; }
+  bar.innerHTML=`<div class="cmpbar"><div class="in"><span>${cmpSel.length?cmpSel.length+' '+plural(cmpSel.length,'selecionado')+' (até 3)':'Toque em 2 ou 3 preparos'}</span><button class="btn" data-act="doCmp" ${cmpSel.length<2?'disabled':''}>Comparar</button></div></div>`;
+}
+
+function beanOptions(sel){
+  const groups=STATUS.map(s=>[s,db.beans.filter(b=>(b.status||'Fechado')===s)]).filter(g=>g[1].length);
+  return `<option value="">Escolha o café</option>`+groups.map(([s,bs])=>`<optgroup label="${esc(s)}">${bs.map(b=>`<option value="${b.id}" ${b.id===sel?'selected':''}>${esc(b.nome)}${b.torrefacao?' ('+esc(b.torrefacao)+')':''}</option>`).join('')}</optgroup>`).join('');
+}
+function beanCard(bean,at){
+  if(!bean) return `<div class="beancard">Nenhum café escolhido. <a href="#/cafe/novo?volta=novo">Cadastrar café</a></div>`;
+  const rest=daysOff(bean.dataTorra,at||Date.now());
+  const parts=[bean.torrefacao,bean.produtor,bean.processo,bean.torra?('torra '+bean.torra.toLowerCase()):''].filter(Boolean).map(esc);
+  return `<div class="beancard"><div>${parts.join(', ')||'Sem detalhes cadastrados'}</div>
+    <div>${bean.dataTorra?`Torrado em ${dateBR(bean.dataTorra)}, <span class="rest">${rest} ${plural(rest,'dia')} de descanso</span>`:'Sem data de torra'}. <a href="#/cafe/${bean.id}/editar?volta=${D&&D.mode==='edit'?'editar/'+D.editId:'novo'}">Editar café</a></div></div>`;
+}
+
+function vBrewForm(editId){
+  if(editId){ const b=brewById(editId); if(!b) return vNotFound(); if(!DE||DE.editId!==editId) DE=draftFrom(b,'edit'); D=DE; }
+  else { if(!DN) { DN=newDraft(); } D=DN; saveDraft(); }
+  const bean=beanById(D.beanId);
+  const r=ratioOf(num(D.cafe),num(D.aguaG));
+  const html=`<div data-scope="D">
+  <h2 class="sec-h"><span class="n">1</span>Café</h2>
+  <label class="field"><span class="lab">Café</span><select data-f="beanId">${beanOptions(D.beanId)}</select></label>
+  <div id="beanCard">${beanCard(bean, D.when?new Date(D.when).getTime():Date.now())}</div>
+  <div class="field"><span class="lab">Estado do grão</span>${segHTML('estadoGrao',ESTADOS,D.estadoGrao)}</div>
+  <div class="row2">
+    <label class="field"><span class="lab">Sessão de teste <em>opcional</em></span><input type="text" data-f="sessao" list="dlSes" value="${esc(D.sessao)}" placeholder="ex.: Fase 1"></label>
+    <label class="field"><span class="lab">Código cego <em>opcional</em></span><input type="text" data-f="codigo" value="${esc(D.codigo)}" placeholder="ex.: A"></label>
+  </div>
+
+  <h2 class="sec-h"><span class="n">2</span>Moagem</h2>
+  ${suggest('moedores','moedor').length
+    ?`<div class="field"><span class="lab">Moedor</span>${segHTML('moedor',[...new Set([...suggest('moedores','moedor'),D.moedor].filter(Boolean))],D.moedor)}</div>`
+    :`<label class="field"><span class="lab">Moedor</span><input type="text" data-f="moedor" value="${esc(D.moedor)}" placeholder="nome do moedor"></label><p class="hint">Fica salvo na lista depois do primeiro preparo. Para cadastrar outros, use Mais.</p>`}
+  <div class="row2">
+    <label class="field"><span class="lab">Clique</span><input type="text" inputmode="decimal" data-f="clique" value="${esc(D.clique)}" placeholder="ex.: 4.2 ou 1.50"></label>
+    <div class="field"><span class="lab">Orientação</span>${segHTML('orientacao',ORIENT,D.orientacao)}</div>
+  </div>
+
+  <h2 class="sec-h"><span class="n">3</span>Água e receita</h2>
+  <div class="field"><span class="lab">Método</span>${segHTML('metodo',suggest('metodos','metodo'),D.metodo)}</div>
+  <div class="row2">
+    <label class="field"><span class="lab">Filtro</span><select data-f="filtro">${[...new Set([...suggest('filtros','filtro'),D.filtro].filter(Boolean))].map(f=>`<option ${f===D.filtro?'selected':''}>${esc(f)}</option>`).join('')}</select></label>
+    <label class="field check" style="margin-top:22px"><input type="checkbox" data-f="enxague" ${D.enxague?'checked':''}> Filtro enxaguado</label>
+  </div>
+  <div class="row2">
+    <label class="field"><span class="lab">Água utilizada</span><input type="text" data-f="agua" list="dlAgua" value="${esc(D.agua)}" placeholder="marca ou tipo"></label>
+    <label class="field"><span class="lab">Dureza/TDS <em>opcional</em></span><div class="unit"><input type="text" inputmode="decimal" data-f="ppm" value="${esc(D.ppm)}" placeholder="—"><span>ppm</span></div></label>
+  </div>
+  <div class="field"><span class="lab">Temperatura da água</span><div class="stepper"><button type="button" data-act="step" data-f="temp" data-d="-1" aria-label="Diminuir temperatura">−</button><div class="unit"><input type="text" inputmode="decimal" data-f="temp" value="${esc(D.temp)}"><span>°C</span></div><button type="button" data-act="step" data-f="temp" data-d="1" aria-label="Aumentar temperatura">+</button></div></div>
+  <div class="row3">
+    <label class="field"><span class="lab">Café</span><div class="unit"><input type="text" inputmode="decimal" data-f="cafe" value="${esc(D.cafe)}"><span>g</span></div></label>
+    <label class="field"><span class="lab">Água</span><div class="unit"><input type="text" inputmode="decimal" data-f="aguaG" value="${esc(D.aguaG)}"><span>g</span></div></label>
+    <label class="field"><span class="lab">Proporção</span><div class="unit"><input type="text" inputmode="decimal" data-f="ratio" value="${r?fmt(r):''}" placeholder="16" style="padding-left:30px;padding-right:10px"><span style="left:12px;right:auto">1:</span></div></label>
+  </div>
+  <p class="hint">Mudar a proporção recalcula a água.</p>
+  <div class="field"><span class="lab">Agitação</span>${segHTML('agitacao',AGIT,D.agitacao)}</div>
+
+  <h2 class="sec-h"><span class="n">4</span>Extração</h2>
+  <div class="lcd" id="lcd">${lcdHTML()}</div>
+  <div id="pours">${poursHTML()}</div>
+  <div class="row3" style="margin-top:14px">
+    <label class="field"><span class="lab">Tempo total</span><input type="text" inputmode="numeric" data-f="tempoTotal" data-time="1" value="${D.tempoTotal!=null?fmtT(D.tempoTotal):''}" placeholder="m:ss"></label>
+    <label class="field"><span class="lab">Bebida <em>opcional</em></span><div class="unit"><input type="text" inputmode="decimal" data-f="bebida" value="${esc(D.bebida)}" placeholder="—"><span>g</span></div></label>
+    <label class="field"><span class="lab">TDS <em>opcional</em></span><div class="unit"><input type="text" inputmode="decimal" data-f="tds" value="${esc(D.tds)}" placeholder="—"><span>%</span></div></label>
+  </div>
+  <div class="derived" id="eyLine">${eyLine(D)}</div>
+
+  <h2 class="sec-h"><span class="n">5</span>Observações</h2>
+  <label class="field"><span class="lab">Como foi o preparo</span><textarea data-f="notas" placeholder="cama ficou plana, drenagem travou no fim, canalizou…">${esc(D.notas)}</textarea></label>
+  <label class="field"><span class="lab">Data e hora</span><input type="datetime-local" data-f="when" value="${esc(D.when)}"></label>
+  <p class="hint">Em branco, vale o início do cronômetro ou a hora em que você salvar.</p>
+  <div class="btns"><button class="btn block" data-act="saveBrew">Salvar preparo</button></div>
+  ${editId?'':`<div class="btns"><button class="btn danger" data-act="discardDraft">Descartar rascunho</button></div>`}
+  ${dl('dlSes',suggest('sessoes','sessao'))}${dl('dlAgua',suggest('aguas','agua'))}
+  </div>`;
+  return {title:editId?'Editar preparo':'Novo preparo',tab:editId?null:'novo',back:editId?'#/preparo/'+editId:null,action:{label:'Salvar',act:'saveBrew'},html,after:()=>{ if(D.timer.start&&!D.timer.end) startLoop(); }};
+}
+function eyLine(d){ const e=ey(d); return e?`<span>Extração</span><b>${fmt(e.v,1)}%</b><span>${e.est?'estimada pela água (retenção de 2 g por g de café)':''}</span>`:''; }
+function elapsed(){ const t=D&&D.timer; if(!t||!t.start) return 0; return ((t.end||Date.now())-t.start)/1000; }
+function lcdTime(s){ const m=Math.floor(s/60), r=s-m*60, sec=Math.floor(r), dec=Math.floor((r-sec)*10); return `${m}:${pad(sec)}<span class="dec">,${dec}</span>`; }
+function lcdSub(){
+  const P=D.pours, done=P.filter(p=>p.t!=null).length, N=P.length;
+  if(!D.timer.start) return N?`${N} ${plural(N,'despejo')} planejado${N===1?'':'s'}${P[0]&&P[0].g?`<small>Bloom até ${fmt(P[0].g)} g</small>`:''}`:'Sem despejos planejados<small>Eles são criados a cada toque</small>';
+  if(D.timer.end) return `Tempo total ${fmtT(D.tempoTotal)}<small>${done} ${plural(done,'despejo')} registrado${done===1?'':'s'}</small>`;
+  const cur=P[done-1], nxt=P[done];
+  return `Despejo ${done} de ${Math.max(N,done)}${cur&&cur.g?`, até ${fmt(cur.g)} g`:''}<small>${nxt?`Próximo: ${nxt.g?'até '+fmt(nxt.g)+' g':'sem alvo'}`:'Toque em fim da drenagem quando a cama secar'}</small>`;
+}
+function lcdHTML(){
+  const st=!D.timer.start?'idle':(D.timer.end?'end':'run');
+  const btns= st==='idle' ? `<div class="acts"><button class="go" data-act="tStart">Iniciar no primeiro despejo</button></div>`
+    : st==='run' ? `<div class="acts two"><button class="go" data-act="tLap">Próximo despejo</button><button class="alt" data-act="tStop">Fim da drenagem</button></div>`
+    : `<div class="acts"><button class="reset" data-act="tReset">Zerar cronômetro</button></div>`;
+  return `<div class="t" id="tDisp" aria-live="off">${lcdTime(st==='end'?(D.tempoTotal||0):elapsed())}</div><div class="sub" id="tSub">${lcdSub()}</div>${btns}`;
+}
+function poursHTML(){
+  return `<div class="pours"><div class="pr head"><span>Despejo</span><span>Início</span><span>Peso acumulado</span><span></span></div>
+  ${D.pours.map((p,i)=>`<div class="pr"><span class="pn">${i+1}${i===0?'<small>bloom</small>':''}</span>
+    <input type="text" inputmode="numeric" data-pi="${i}" data-pk="t" value="${p.t!=null?fmtT(p.t):''}" placeholder="m:ss" aria-label="Início do despejo ${i+1}">
+    <div class="unit"><input type="text" inputmode="decimal" data-pi="${i}" data-pk="g" value="${p.g!=null?fmt(p.g):''}" placeholder="—" aria-label="Peso acumulado no despejo ${i+1}"><span>g</span></div>
+    <button type="button" class="x" data-act="rmPour" data-i="${i}" aria-label="Remover despejo ${i+1}">×</button></div>`).join('')}
+  <button type="button" class="add" data-act="addPour">Adicionar despejo</button></div>`;
+}
+function refreshTimer(){ const l=$('#lcd'); if(l) l.innerHTML=lcdHTML(); const p=$('#pours'); if(p) p.innerHTML=poursHTML(); const tt=$('[data-f="tempoTotal"]'); if(tt&&document.activeElement!==tt) tt.value=D.tempoTotal!=null?fmtT(D.tempoTotal):''; }
+function startLoop(){ cancelAnimationFrame(rafId); const tick=()=>{ const el=$('#tDisp'); if(!el||!D||!D.timer.start||D.timer.end) return; el.innerHTML=lcdTime(elapsed()); rafId=requestAnimationFrame(tick); }; rafId=requestAnimationFrame(tick); }
+async function keepAwake(on){ try{ if(on&&'wakeLock' in navigator){ wakeLock=await navigator.wakeLock.request('screen'); } else if(!on&&wakeLock){ await wakeLock.release(); wakeLock=null; } }catch(e){} }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&D&&D.timer&&D.timer.start&&!D.timer.end) keepAwake(true); });
+const buzz=ms=>{ try{ navigator.vibrate&&navigator.vibrate(ms); }catch(e){} };
+
+function vBrew(id){
+  const b=brewById(id); if(!b) return vNotFound();
+  const bean=beanOf(b), snapB=b.bean||{}, r=ratioOf(num(b.cafe),num(b.aguaG)), rest=daysOff(bean.dataTorra||snapB.dataTorra,b.criadoEm), e=ey(b);
+  const evs=evalsOf(id);
+  const row=(k,v)=>v===''||v==null?'':`<dt>${k}</dt><dd>${v}</dd>`;
+  const P=b.pours||[];
+  const bloom=P.length>1&&P[0].g!=null&&P[1].t!=null?`${fmt(P[0].g)} g por ${fmtT(P[1].t)}`:'';
+  const html=`<p class="muted" style="margin-top:6px">${dtBR(b.criadoEm)}${b.sessao?`, <span class="tag">${esc(b.sessao)}</span>`:''}${b.codigo?` <span class="tag">Código ${esc(b.codigo)}</span>`:''}</p>
+  <div class="big3"><div><b>${r?'1:'+fmt(r):'—'}</b><span>proporção</span></div><div><b>${b.tempoTotal!=null?fmtT(b.tempoTotal):'—'}</b><span>tempo total</span></div><div><b>${rest!=null?rest:'—'}</b><span>${rest!=null?plural(rest,'dia')+' de descanso':'descanso'}</span></div></div>
+  <h3>Avaliações</h3>
+  ${(()=>{ const all=evs.filter(x=>ATTR.some(([k])=>x[k]!=null)), rs=all.slice(-3); if(!rs.length) return '';
+    const lab=x=>rs.filter(y=>y.momento===x.momento).length>1?`${x.momento||'Avaliação'} ${hm(x.criadoEm)}`:(x.momento||'Avaliação');
+    return radarBox(rs.map(x=>({label:lab(x),vals:x})),{caption:all.length>3?'Gráfico com as 3 avaliações mais recentes.':''}); })()}
+  ${evs.length?evs.map(evHTML).join(''):`<p class="muted">Ainda sem avaliação. Prove quente e, se puder, de novo morno e frio: a acidez e a doçura mudam conforme esfria.</p>`}
+  <div class="btns"><a class="btn" href="#/avaliar/${b.id}">${evs.length?'Adicionar avaliação':'Avaliar este preparo'}</a></div>
+  <h3>Café</h3>
+  <dl class="kv">${row('Café',esc(bean.nome))}${row('Torrefação',esc(bean.torrefacao))}${row('Produtor',esc(bean.produtor))}${row('Região',esc(bean.regiao))}${row('Variedade',esc(bean.variedade))}${row('Processo',esc(bean.processo))}${row('Nível de torra',esc(bean.torra))}${row('Data de torra',dateBR(bean.dataTorra))}${row('Estado do grão',esc(b.estadoGrao))}</dl>
+  <h3>Moagem e receita</h3>
+  <dl class="kv">${row('Moedor',esc(b.moedor))}${row('Clique',esc(b.clique))}${row('Orientação',esc(b.orientacao))}${row('Método',esc(b.metodo))}${row('Filtro',esc(b.filtro)+(b.filtro?(b.enxague?', enxaguado':', sem enxágue'):''))}${row('Água',esc(b.agua))}${row('Dureza/TDS da água',b.ppm?fmt(num(b.ppm),0)+' ppm':'')}${row('Temperatura',b.temp?fmt(num(b.temp))+' °C':'')}${row('Café',b.cafe?fmt(num(b.cafe))+' g':'')}${row('Água',b.aguaG?fmt(num(b.aguaG),0)+' g':'')}${row('Agitação',esc(b.agitacao))}</dl>
+  <h3>Extração</h3>
+  ${P.length?`<table class="ptable"><thead><tr><th>Despejo</th><th>Início</th><th>Peso acumulado</th></tr></thead><tbody>${P.map((p,i)=>`<tr><td>${i+1}${i===0?' (bloom)':''}</td><td>${p.t!=null?fmtT(p.t):'—'}</td><td>${p.g!=null?fmt(p.g)+' g':'—'}</td></tr>`).join('')}</tbody></table>`:''}
+  <dl class="kv">${row('Despejos',P.length||'')}${row('Bloom',bloom)}${row('Tempo total',b.tempoTotal!=null?fmtT(b.tempoTotal):'')}${row('Bebida',b.bebida?fmt(num(b.bebida))+' g':'')}${row('TDS',b.tds?fmt(num(b.tds),2)+'%':'')}${row('Extração',e?fmt(e.v,1)+'%'+(e.est?' (estimada)':''):'')}</dl>
+  ${b.notas?`<h3>Observações</h3><p>${esc(b.notas).replace(/\n/g,'<br>')}</p>`:''}
+  <div class="btns" style="margin-top:22px"><button class="btn ghost" data-act="repeat" data-id="${b.id}">Repetir com ajustes</button><a class="btn quiet" href="#/editar/${b.id}">Editar</a></div>
+  <div class="btns"><button class="btn danger" data-act="delBrew" data-id="${b.id}">Excluir preparo</button></div>`;
+  return {title:bean.nome||'Preparo',back:'#/preparos',action:{label:'Editar',act:'go',href:'#/editar/'+b.id},html};
+}
+function evHTML(e){
+  const attrs=ATTR.filter(([k])=>e[k]!=null);
+  return `<div class="ev"><div class="ev-h"><div><div class="stage">${esc(e.momento||'Avaliação')}</div><div class="when">${dtBR(e.criadoEm)}</div></div>${e.nota!=null?`<div class="score">${fmt(e.nota)}</div>`:''}</div>
+  ${e.extracao!=null?`<div class="ev-x">${xbar(e.extracao,true)}<span>${XLAB[e.extracao]}</span></div>`:''}
+  ${attrs.length?`<div class="attrs">${attrs.map(([k,l])=>`<div class="attr"><span>${l}</span><span>${dots(e[k])}<b>${e[k]}</b></span></div>`).join('')}</div>`:''}
+  ${e.percebidas?`<p><span class="lbl">Notas percebidas</span>${esc(e.percebidas)}</p>`:''}
+  ${e.comentario?`<p><span class="lbl">Comentário</span>${esc(e.comentario).replace(/\n/g,'<br>')}</p>`:''}
+  ${e.ajuste?`<p><span class="lbl">Próximo ajuste</span>${esc(e.ajuste)}</p>`:''}
+  <a class="edit" href="#/avaliacao/${e.id}">Editar avaliação</a></div>`;
+}
+
+function vEvalForm(brewId,evalId){
+  let b;
+  if(evalId){ const ex=db.evals.find(x=>x.id===evalId); if(!ex) return vNotFound(); if(!E||E.id!==evalId) E=clone(ex); b=brewById(ex.brewId); }
+  else { b=brewById(brewId); if(!b) return vNotFound(); if(!E||E.id||E.brewId!==brewId){ const n=evalsOf(brewId).length; E={brewId,momento:MOMENTOS[Math.min(n,2)],extracao:null,nota:7,percebidas:'',comentario:'',ajuste:''}; ATTR.forEach(([k])=>E[k]=null); } }
+  const bean=beanOf(b);
+  const html=`<div data-scope="E"><p class="muted" style="margin-top:6px">${esc(bean.nome)}, ${dtBR(b.criadoEm)}</p>
+  <div class="field"><span class="lab">Momento da prova</span>${segHTML('momento',MOMENTOS,E.momento)}</div>
+  <div class="field"><span class="lab">Nota geral</span><div class="scorebox"><output id="notaOut">${fmt(E.nota)}</output><input type="range" min="0" max="10" step="0.5" value="${E.nota??7}" data-f="nota" aria-label="Nota geral de 0 a 10"></div></div>
+  <div class="field"><span class="lab">Extração</span><div class="xseg" data-f="extracao">${[-2,-1,0,1,2].map(v=>`<button type="button" data-act="seg" data-num="1" data-v="${v}" aria-pressed="${E.extracao===v}">${XLAB[v]}</button>`).join('')}</div></div>
+  <p class="hint">Sub: azedo, aguado, final curto. Sobre: amargo, seco, adstringente.</p>
+  <section class="profile">
+    <h3>Perfil sensorial <span class="muted small" style="font-weight:400">de 1 (pouco) a 5 (muito)</span></h3>
+    <div class="radar-live" id="radarLive">${liveRadar()}</div>
+    ${ATTR.map(([k,l])=>`<div class="arow"><span class="al" id="al_${k}">${l}</span><div class="seg sc pick" data-f="${k}" role="group" aria-labelledby="al_${k}">${[1,2,3,4,5].map(v=>`<button type="button" data-act="seg" data-v="${v}" class="${E[k]!=null&&v<=E[k]?'fill':''}" aria-pressed="${E[k]===v}" aria-label="${v} de 5">${v}</button>`).join('')}</div></div>`).join('')}
+    <details class="gloss"><summary>O que observar em cada atributo</summary><dl>${ATTR.map(([k,l])=>`<dt>${l}</dt><dd>${ATTR_HINT[k]}</dd>`).join('')}</dl></details>
+  </section>
+  <label class="field"><span class="lab">Notas percebidas</span><input type="text" data-f="percebidas" value="${esc(E.percebidas)}" placeholder="pêssego, mel, floral…"></label>
+  <label class="field"><span class="lab">Comentário</span><textarea data-f="comentario" placeholder="o que se destacou, o que faltou">${esc(E.comentario)}</textarea></label>
+  <label class="field"><span class="lab">Próximo ajuste</span><input type="text" data-f="ajuste" id="ajIn" value="${esc(E.ajuste)}" placeholder="o que mudar na próxima"></label>
+  <div class="quick">${AJUSTES.map(a=>`<button type="button" data-act="quickAj" data-v="${esc(a)}">${esc(a)}</button>`).join('')}</div>
+  <div class="btns" style="margin-top:20px"><button class="btn block" data-act="saveEval">Salvar avaliação</button></div>
+  ${evalId?`<div class="btns"><button class="btn danger" data-act="delEval" data-id="${evalId}">Excluir avaliação</button></div>`:''}</div>`;
+  return {title:evalId?'Editar avaliação':'Avaliar preparo',back:'#/preparo/'+b.id,action:{label:'Salvar',act:'saveEval'},html};
+}
+
+function vBeans(){
+  const groups=STATUS.map(s=>[s,db.beans.filter(b=>(b.status||'Fechado')===s)]).filter(g=>g[1].length);
+  let html='';
+  if(!db.beans.length) html=`<div class="empty"><h2>Nenhum café cadastrado</h2><p class="muted">Cadastre o pacote uma vez; os preparos herdam torrefação, produtor, processo e data de torra.</p><div class="btns"><a class="btn" href="#/cafe/novo">Cadastrar café</a><a class="btn quiet" href="#/mais">Importar um backup</a></div></div>`;
+  groups.forEach(([s,bs])=>{
+    html+=`<div class="day">${esc(s)}</div>`;
+    bs.forEach(b=>{ const rest=daysOff(b.dataTorra,Date.now()); const n=brewsOf(b.id).length; const left=b.peso?Math.max(0,num(b.peso)-usedBy(b.id)):null;
+      html+=`<a class="bean" href="#/cafe/${b.id}"><div class="bn">${esc(b.nome)}<span>${rest!=null?rest+' '+plural(rest,'dia'):'sem data'}</span></div>
+      <div class="bm">${[b.torrefacao,b.processo,b.torra].filter(Boolean).map(esc).join(', ')}</div>
+      <div class="bm small">${n} ${plural(n,'preparo')}${left!=null?`, restam cerca de ${fmt(left,0)} g`:''}</div></a>`; });
+  });
+  return {title:'Cafés',tab:'cafes',action:{label:'Novo café',act:'go',href:'#/cafe/novo'},html};
+}
+function vBean(id){
+  const b=beanById(id); if(!b) return vNotFound();
+  const brews=brewsOf(id), rest=daysOff(b.dataTorra,Date.now()), used=usedBy(id), left=b.peso?Math.max(0,num(b.peso)-used):null;
+  const row=(k,v)=>!v?'':`<dt>${k}</dt><dd>${v}</dd>`;
+  const html=`<p style="margin-top:6px"><span class="status ${statusCls(b.status)}">${esc(b.status||'Fechado')}</span></p>
+  <div class="big3"><div><b>${rest!=null?rest:'—'}</b><span>${rest!=null?plural(rest,'dia')+' de descanso':'sem data de torra'}</span></div><div><b>${brews.length}</b><span>${plural(brews.length,'preparo')}</span></div><div><b>${left!=null?fmt(left,0)+' g':fmt(used,0)+' g'}</b><span>${left!=null?'restantes (aprox.)':'usados'}</span></div></div>
+  <dl class="kv">${row('Torrefação',esc(b.torrefacao))}${row('Produtor',esc(b.produtor))}${row('Fazenda',esc(b.fazenda))}${row('Região',esc(b.regiao))}${row('Variedade',esc(b.variedade))}${row('Processo',esc(b.processo))}${row('Nível de torra',esc(b.torra))}${row('Altitude',esc(b.altitude))}${row('Data de torra',dateBR(b.dataTorra))}${row('Peso do pacote',b.peso?fmt(num(b.peso),0)+' g':'')}${row('Notas da torrefação',esc(b.notas))}${row('Observações',esc(b.obs))}</dl>
+  <div class="btns" style="margin-top:16px"><button class="btn" data-act="brewThis" data-id="${b.id}">Novo preparo com este café</button></div>
+  <h3>Histórico de regulagem</h3>
+  ${brews.length?`<div class="cwrap"><table class="ctable"><thead><tr><th>Data</th><th>Moagem</th><th>Receita</th><th>Tempo</th><th>Nota</th></tr></thead><tbody>${brews.map(x=>{ const le=lastEval(x.id), r=ratioOf(num(x.cafe),num(x.aguaG));
+    return `<tr data-act="go" data-href="#/preparo/${x.id}" style="cursor:pointer"><td>${new Date(x.criadoEm).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</td><td>${esc(short(x.moedor))} ${esc(x.clique||'')}</td><td>${esc(short(x.metodo))}${r?' 1:'+fmt(r):''}${x.temp?', '+fmt(num(x.temp))+'°':''}</td><td>${x.tempoTotal!=null?fmtT(x.tempoTotal):'—'}</td><td>${le&&le.nota!=null?fmt(le.nota):'—'}${le&&le.extracao!=null?' '+xbar(le.extracao):''}</td></tr>`; }).join('')}</tbody></table></div>`:`<p class="muted">Nenhum preparo com este café ainda.</p>`}
+  <div class="btns" style="margin-top:20px"><a class="btn quiet" href="#/cafe/${b.id}/editar">Editar café</a></div>
+  <div class="btns"><button class="btn danger" data-act="delBean" data-id="${b.id}">Excluir café</button></div>`;
+  return {title:b.nome,back:'#/cafes',action:{label:'Editar',act:'go',href:'#/cafe/'+b.id+'/editar'},html};
+}
+function vBeanForm(id,q){
+  const b=id?beanById(id):{nome:'',torrefacao:'',produtor:'',fazenda:'',regiao:'',variedade:'',processo:'',torra:'',altitude:'',dataTorra:'',notas:'',peso:'',status:'Fechado',obs:''};
+  if(id&&!b) return vNotFound();
+  const volta=q.get('volta')||'';
+  const torrs=[...new Set(db.beans.map(x=>x.torrefacao).filter(Boolean))];
+  const inp=(k,l,ph='',extra='')=>`<label class="field"><span class="lab">${l}</span><input type="text" name="${k}" value="${esc(b[k]??'')}" placeholder="${ph}" ${extra}></label>`;
+  const html=`<form id="beanForm" data-id="${id||''}" data-volta="${esc(volta)}" style="margin-top:8px">
+    ${inp('nome','Nome do café','ex.: Catuaí Amarelo natural','required')}
+    <div class="row2">${inp('torrefacao','Torrefação','','list="dlTorr"')}${inp('produtor','Produtor')}</div>
+    <div class="row2">${inp('fazenda','Fazenda ou sítio')}${inp('regiao','Região')}</div>
+    <div class="row2">${inp('variedade','Variedade')}${inp('altitude','Altitude','ex.: 1.150 m')}</div>
+    <div class="row2"><label class="field"><span class="lab">Processamento</span><input type="text" name="processo" list="dlProc" value="${esc(b.processo)}"></label>
+    <label class="field"><span class="lab">Nível de torra</span><select name="torra"><option value="">—</option>${TORRAS.map(t=>`<option ${t===b.torra?'selected':''}>${t}</option>`).join('')}</select></label></div>
+    <div class="row2"><label class="field"><span class="lab">Data de torra</span><input type="date" name="dataTorra" value="${esc(b.dataTorra)}"></label>
+    <label class="field"><span class="lab">Peso do pacote</span><div class="unit"><input type="text" inputmode="decimal" name="peso" value="${b.peso!=null?esc(b.peso):''}"><span>g</span></div></label></div>
+    <label class="field"><span class="lab">Situação</span><select name="status">${STATUS.map(s=>`<option ${s===(b.status||'Fechado')?'selected':''}>${s}</option>`).join('')}</select></label>
+    ${inp('notas','Notas da torrefação','pêssego, mel…')}
+    <label class="field"><span class="lab">Observações</span><textarea name="obs">${esc(b.obs)}</textarea></label>
+    <div class="btns"><button class="btn block" type="submit">Salvar café</button></div>
+    ${dl('dlTorr',torrs)}${dl('dlProc',PROCESSOS)}</form>`;
+  return {title:id?'Editar café':'Novo café',back:volta?'#/'+volta:(id?'#/cafe/'+id:'#/cafes'),html,after:()=>$('#beanForm').addEventListener('submit',saveBean)};
+}
+
+function vCompare(ids){
+  const brews=ids.split(',').map(brewById).filter(Boolean).slice(0,3);
+  if(brews.length<2) return {title:'Comparar',back:'#/preparos',html:`<p class="muted" style="margin-top:12px">Escolha pelo menos dois preparos na lista.</p>`};
+  const L=brews.map(b=>({b,bean:beanOf(b),e:lastEval(b.id)}));
+  const sec=t=>({sec:t});
+  const R=(label,f,hide)=>({label,f,hide});
+  const rows=[ sec('Café'),
+    R('Café',x=>esc(x.bean.nome)), R('Torrefação',x=>esc(x.bean.torrefacao)), R('Processo',x=>esc(x.bean.processo)), R('Torra',x=>esc(x.bean.torra)),
+    R('Descanso',x=>{ const r=daysOff(x.bean.dataTorra,x.b.criadoEm); return r!=null?r+' '+plural(r,'dia'):''; }), R('Estado do grão',x=>esc(x.b.estadoGrao)),
+    sec('Moagem'), R('Moedor',x=>esc(x.b.moedor),1), R('Clique',x=>esc(x.b.clique),1), R('Orientação',x=>esc(x.b.orientacao),1),
+    sec('Receita'), R('Método',x=>esc(x.b.metodo)), R('Filtro',x=>esc(x.b.filtro)), R('Água',x=>esc(x.b.agua)), R('Temperatura',x=>x.b.temp?fmt(num(x.b.temp))+' °C':''),
+    R('Café',x=>x.b.cafe?fmt(num(x.b.cafe))+' g':''), R('Água',x=>x.b.aguaG?fmt(num(x.b.aguaG),0)+' g':''), R('Proporção',x=>{ const r=ratioOf(num(x.b.cafe),num(x.b.aguaG)); return r?'1:'+fmt(r):''; }), R('Agitação',x=>esc(x.b.agitacao)),
+    sec('Extração'), R('Despejos',x=>(x.b.pours||[]).length||''), R('Bloom',x=>{ const P=x.b.pours||[]; return P.length>1&&P[1].t!=null?fmtT(P[1].t):''; }), R('Tempo total',x=>x.b.tempoTotal!=null?fmtT(x.b.tempoTotal):''),
+    R('TDS',x=>x.b.tds?fmt(num(x.b.tds),2)+'%':''), R('Rendimento (EY)',x=>{ const e=ey(x.b); return e?fmt(e.v,1)+'%':''; }),
+    sec('Última avaliação'), R('Nota geral',x=>x.e&&x.e.nota!=null?fmt(x.e.nota):''), R('Ponto de extração',x=>x.e&&x.e.extracao!=null?XLAB[x.e.extracao]:''),
+    ...ATTR.map(([k,l])=>R(l,x=>x.e&&x.e[k]!=null?String(x.e[k]):'')), R('Notas percebidas',x=>x.e?esc(x.e.percebidas):''), R('Comentário',x=>x.e?esc(x.e.comentario):'') ];
+  const sw=i=>`<svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true" style="vertical-align:-2px;margin-right:5px">${markSVG(i,7,7)}</svg>`;
+  const head=L.map((x,i)=>sw(i)+(blind?`Amostra ${x.b.codigo?esc(x.b.codigo):String.fromCharCode(65+i)}`:`${esc(x.bean.nome)}<div class="small muted" style="font-weight:400">${dtBR(x.b.criadoEm)}</div>`));
+  const sameBean=new Set(L.map(x=>x.b.beanId)).size===1;
+  let labs=L.map((x,i)=>blind?`Amostra ${x.b.codigo||String.fromCharCode(65+i)}`:(sameBean?(`${short(x.b.moedor)} ${x.b.clique||''}`.trim()||dtBR(x.b.criadoEm)):(x.bean.nome||'Café')));
+  if(!blind&&new Set(labs).size<labs.length) labs=labs.map((l,i)=>`${l} (${dtBR(L[i].b.criadoEm)})`);
+  const radar=radarBox(L.map((x,i)=>({slot:i,label:labs[i],vals:x.e||{}})),{caption:'Perfil da última avaliação de cada preparo.'});
+  let body='';
+  rows.forEach(r=>{
+    if(r.sec){ body+=`<tr class="sec"><th colspan="${L.length+1}">${r.sec}</th></tr>`; return; }
+    const vals=L.map(x=>String(r.f(x)??''));
+    if(vals.every(v=>!v)) return;
+    const diff=new Set(vals).size>1;
+    body+=`<tr class="${diff?'diff':''}"><th>${r.label}</th>${vals.map(v=>`<td>${blind&&r.hide?'oculto':(v||'—')}</td>`).join('')}</tr>`;
+  });
+  const html=`<p class="muted small" style="margin-top:6px">Linhas destacadas mostram o que mudou entre os preparos.</p>
+  <label class="check"><input type="checkbox" data-act="blind" ${blind?'checked':''}> Modo cego: esconder moedor, clique e orientação</label>
+  ${radar}
+  <div class="cwrap"><table class="ctable"><thead><tr><th></th>${head.map(h=>`<td>${h}</td>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
+  return {title:'Comparar',back:'#/preparos',html};
+}
+
+function vMore(){
+  const lb=db.prefs.lastBackup;
+  const listEd=(key,label)=>`<h3>${label}</h3><div class="listed">${(db.lists[key]||[]).map((v,i)=>`<span>${esc(v)}<button data-act="rmList" data-k="${key}" data-i="${i}" aria-label="Remover ${esc(v)}">×</button></span>`).join('')||'<span class="muted small" style="border:0;padding:4px 0">Nenhum ainda</span>'}</div>
+    <div class="addrow"><input type="text" id="add_${key}" placeholder="Adicionar"><button class="btn quiet" data-act="addList" data-k="${key}">Adicionar</button></div>`;
+  const html=`<h3>Backup</h3>
+  <p class="muted">${storageOK?'Os dados ficam salvos só neste aparelho, no navegador.':'<b>Este modo de abertura não está salvando os dados.</b> Exporte o backup antes de fechar, ou instale o app.'} ${lb?'Último backup em '+new Date(lb).toLocaleDateString('pt-BR')+'.':'Nenhum backup feito ainda.'}</p>
+  <div class="btns"><button class="btn" data-act="exportJSON">Baixar backup</button>${canShareFiles()?'<button class="btn ghost" data-act="shareJSON">Enviar backup</button>':''}<button class="btn quiet" data-act="importJSON">Importar backup</button></div>
+  <p class="muted small">O backup é um arquivo .json com cafés, preparos e avaliações. Baixar salva em Downloads; enviar abre o compartilhamento do Android (Drive, WhatsApp, e-mail).</p>
+  <h3>Planilhas</h3>
+  <div class="btns"><button class="btn quiet" data-act="exportCSV" data-k="brews">Preparos em CSV</button><button class="btn quiet" data-act="exportCSV" data-k="evals">Avaliações em CSV</button></div>
+  <p class="muted small">Uma linha por preparo (com a última avaliação e a média das notas) e uma linha por avaliação. Separador vírgula, decimal com ponto.</p>
+  <hr>
+  ${listEd('moedores','Moedores')}${listEd('metodos','Métodos')}${listEd('filtros','Filtros')}${listEd('aguas','Águas')}${listEd('sessoes','Sessões de teste')}
+  <hr>
+  <h3>Aparência</h3>
+  ${segHTML('theme',[['auto','Automático'],['light','Claro'],['dark','Escuro']],db.prefs.theme)}
+  <hr>
+  <p class="muted small">${db.beans.length} cafés, ${db.brews.length} preparos, ${db.evals.length} avaliações.</p>
+  <div class="btns"><button class="btn danger" data-act="wipe">Apagar todos os dados</button></div>`;
+  return {title:'Mais',tab:'mais',html:`<div data-scope="P">${html}</div>`};
+}
+function vNotFound(){ return {title:'Não encontrado',back:'#/preparos',html:`<p class="muted" style="margin-top:12px">Esse registro não existe mais.</p><div class="btns"><a class="btn quiet" href="#/preparos">Voltar aos preparos</a></div>`}; }
+
+/* ================= roteador ================= */
+const ROUTES=[
+  [/^\/?(preparos)?$/,()=>{ curRoute='list'; return vList(); }],
+  [/^\/novo$/,()=>vBrewForm(null)],
+  [/^\/editar\/(\w+)$/,m=>vBrewForm(m[1])],
+  [/^\/preparo\/(\w+)$/,m=>vBrew(m[1])],
+  [/^\/avaliar\/(\w+)$/,m=>vEvalForm(m[1],null)],
+  [/^\/avaliacao\/(\w+)$/,m=>vEvalForm(null,m[1])],
+  [/^\/cafes$/,()=>vBeans()],
+  [/^\/cafe\/novo$/,(m,q)=>vBeanForm(null,q)],
+  [/^\/cafe\/(\w+)\/editar$/,(m,q)=>vBeanForm(m[1],q)],
+  [/^\/cafe\/(\w+)$/,m=>vBean(m[1])],
+  [/^\/comparar\/([\w,]+)$/,m=>vCompare(m[1])],
+  [/^\/mais$/,()=>vMore()],
+];
+let pendingAct=null;
+function render(){
+  cancelAnimationFrame(rafId); $('#tip').hidden=true;
+  const raw=location.hash.slice(1)||'/preparos'; const [path,qs]=raw.split('?'); const q=new URLSearchParams(qs||'');
+  curRoute=''; let v=null;
+  for(const [re,fn] of ROUTES){ const m=path.match(re); if(m){ v=fn(m,q); break; } }
+  if(!v) v=vNotFound();
+  if(!/^\/(novo|editar)/.test(path)) D=null;
+  if(!/^\/(avaliar|avaliacao)/.test(path)) E=null;
+  $('#title').textContent=v.title;
+  const back=$('#backBtn'); back.hidden=!v.back; back.dataset.href=v.back||'';
+  pendingAct=v.action||null;
+  $('#topAct').innerHTML=v.action?`<button class="topact" data-act="topAction">${esc(v.action.label)}</button>`:'';
+  $('#view').innerHTML=v.html;
+  $$('.tab').forEach(t=>t.toggleAttribute('aria-current',false)); if(v.tab){ const t=$(`.tab[data-tab="${v.tab}"]`); if(t) t.setAttribute('aria-current','page'); }
+  renderCmpBar();
+  if(v.after) v.after();
+}
+window.addEventListener('hashchange',()=>{ navCount++; closeSheet(); window.scrollTo(0,0); render(); });
+
+/* ================= ações ================= */
+const ACT={
+  back(el){ if(navCount>0) history.back(); else location.hash=el.dataset.href||'#/preparos'; },
+  topAction(){ const a=pendingAct; if(!a) return; if(a.act==='go') location.hash=a.href; else ACT[a.act]&&ACT[a.act](); },
+  go(el){ location.hash=el.dataset.href; },
+  goMore(){ location.hash='#/mais'; },
+  closeSheet(el,e){ if(e.target.closest('[data-stop]')) return 'pass'; closeSheet(); },
+  filter(el){ filterBean=el.dataset.id; render(); },
+  toggleCmp(){ cmpMode=!cmpMode; cmpSel=[]; render(); },
+  row(el){ if(!cmpMode) return 'pass'; const id=el.dataset.id; const i=cmpSel.indexOf(id); if(i>=0) cmpSel.splice(i,1); else if(cmpSel.length<3) cmpSel.push(id); else toast('Compare até 3 preparos'); el.setAttribute('aria-selected',cmpSel.includes(id)); renderCmpBar(); },
+  doCmp(){ if(cmpSel.length<2) return; const ids=cmpSel.join(','); cmpMode=false; cmpSel=[]; $('#cmpbar').innerHTML=''; location.hash='#/comparar/'+ids; },
+  blind(el){ blind=el.checked; render(); return 'pass'; },
+  seg(el){
+    const seg=el.closest('[data-f]'), f=seg.dataset.f, scope=el.closest('[data-scope]').dataset.scope;
+    let v=el.dataset.num||seg.classList.contains('sc')?Number(el.dataset.v):el.dataset.v;
+    if(scope==='P'){ db.prefs.theme=v; save(true); applyTheme(); $$('button',seg).forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v)); return; }
+    const obj=scope==='E'?E:D;
+    const optional = scope==='E' && f!=='momento';
+    obj[f] = (optional && obj[f]===v) ? null : v;
+    $$('button',seg).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v)===String(obj[f])));
+    if(seg.classList.contains('pick')){ $$('button',seg).forEach(b=>b.classList.toggle('fill',obj[f]!=null&&Number(b.dataset.v)<=obj[f])); const rl=$('#radarLive'); if(rl) rl.innerHTML=liveRadar(); }
+    if(scope==='D'){
+      if(f==='moedor'){
+        const prev=[...db.brews].sort((a,b)=>b.criadoEm-a.criadoEm), ref=prev.find(b=>b.moedor===v&&b.beanId===D.beanId)||prev.find(b=>b.moedor===v);
+        if(ref){ D.orientacao=ref.orientacao||D.orientacao; D.clique=ref.clique||''; const ci=$('[data-scope="D"] input[data-f="clique"]'); if(ci) ci.value=D.clique;
+          $$('[data-f="orientacao"] button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===D.orientacao)); toast('Clique e orientação do último preparo com este moedor'); }
+      }
+      saveDraft();
+    }
+  },
+  step(el){ const f=el.dataset.f, inp=$(`[data-scope="D"] input[data-f="${f}"]`); const n=(num(inp.value)||0)+Number(el.dataset.d); inp.value=fmt(n); D[f]=String(n); saveDraft(); },
+  addPour(){ const P=D.pours, last=P[P.length-1]; P.push({t:null,g:null}); saveDraft(); $('#pours').innerHTML=poursHTML(); $('#tSub')&&($('#tSub').innerHTML=lcdSub()); const ins=$$('#pours input[data-pk="g"]'); ins[ins.length-1].focus(); },
+  rmPour(el){ D.pours.splice(+el.dataset.i,1); saveDraft(); refreshTimer(); },
+  tStart(){ D.timer={start:Date.now(),end:null}; if(!D.pours.length) D.pours.push({t:0,g:null}); else { D.pours.forEach(p=>p.t=null); D.pours[0].t=0; } D.tempoTotal=null; saveDraft(); buzz(40); keepAwake(true); refreshTimer(); startLoop(); },
+  tLap(){ const t=Math.round(elapsed()*10)/10; const i=D.pours.findIndex(p=>p.t==null); if(i>=0) D.pours[i].t=t; else D.pours.push({t,g:null}); saveDraft(); buzz(30); refreshTimer(); startLoop(); },
+  tStop(){ D.timer.end=Date.now(); D.tempoTotal=Math.round(elapsed()); D.pours=D.pours.filter(p=>p.t!=null); saveDraft(); buzz([30,60,30]); keepAwake(false); cancelAnimationFrame(rafId); refreshTimer(); },
+  tReset(){ sheet({title:'Zerar o cronômetro?',body:'Os tempos de cada despejo e o tempo total serão apagados. Os pesos ficam.',actions:[{label:'Zerar',fn:()=>{ D.timer={start:null,end:null}; D.pours.forEach(p=>p.t=null); D.tempoTotal=null; saveDraft(); refreshTimer(); }},{label:'Manter',kind:'quiet'}]}); },
+  saveBrew(){ saveBrew(); },
+  discardDraft(){ sheet({title:'Descartar o rascunho?',body:'A receita e os tempos deste preparo não salvo serão apagados.',actions:[{label:'Descartar',fn:()=>{ D.timer.start&&keepAwake(false); DN=null; lsDel(DKEY); D=null; location.hash='#/preparos'; }},{label:'Continuar editando',kind:'quiet'}]}); },
+  repeat(el){ const b=brewById(el.dataset.id); const go=()=>{ DN=draftFrom(b,'new'); D=DN; saveDraft(); location.hash='#/novo'; }; if(hasProgress(DN)) sheet({title:'Substituir o rascunho atual?',body:'Há um preparo em andamento não salvo.',actions:[{label:'Substituir',fn:go},{label:'Cancelar',kind:'quiet'}]}); else go(); },
+  brewThis(el){ const go=()=>{ DN=newDraft(); DN.beanId=el.dataset.id; D=DN; saveDraft(); location.hash='#/novo'; }; if(hasProgress(DN)) sheet({title:'Substituir o rascunho atual?',body:'Há um preparo em andamento não salvo.',actions:[{label:'Substituir',fn:go},{label:'Cancelar',kind:'quiet'}]}); else go(); },
+  delBrew(el){ const id=el.dataset.id; sheet({title:'Excluir este preparo?',body:'O preparo e as avaliações dele serão apagados. Não dá para desfazer.',actions:[{label:'Excluir',fn:()=>{ db.brews=db.brews.filter(b=>b.id!==id); db.evals=db.evals.filter(e=>e.brewId!==id); save(); toast('Preparo excluído'); location.replace('#/preparos'); }},{label:'Cancelar',kind:'quiet'}]}); },
+  quickAj(el){ const inp=$('#ajIn'); const v=el.dataset.v; inp.value=inp.value.trim()?inp.value.trim().replace(/[.;,]$/,'')+'; '+v.toLowerCase():v; E.ajuste=inp.value; },
+  saveEval(){ saveEval(); },
+  delEval(el){ const id=el.dataset.id; const ev=db.evals.find(x=>x.id===id); sheet({title:'Excluir esta avaliação?',actions:[{label:'Excluir',fn:()=>{ db.evals=db.evals.filter(x=>x.id!==id); save(); E=null; toast('Avaliação excluída'); location.replace('#/preparo/'+ev.brewId); }},{label:'Cancelar',kind:'quiet'}]}); },
+  delBean(el){ const id=el.dataset.id, n=brewsOf(id).length; sheet({title:'Excluir este café?',body:n?`${n} ${plural(n,'preparo')} ${n===1?'usa':'usam'} este café. Eles continuam no histórico com os dados do café copiados.`:'O cadastro será apagado.',actions:[{label:'Excluir',fn:()=>{ db.beans=db.beans.filter(b=>b.id!==id); save(); toast('Café excluído'); location.replace('#/cafes'); }},{label:'Cancelar',kind:'quiet'}]}); },
+  addList(el){ const k=el.dataset.k, inp=$('#add_'+k), v=inp.value.trim(); if(!v) return; if(!db.lists[k].includes(v)) db.lists[k].push(v); save(); render(); },
+  rmList(el){ db.lists[el.dataset.k].splice(+el.dataset.i,1); save(); render(); },
+  exportJSON(){ exportJSON(false); },
+  shareJSON(){ exportJSON(true); },
+  importJSON(){ $('#fileIn').value=''; $('#fileIn').click(); },
+  exportCSV(el){ exportCSV(el.dataset.k); },
+  wipe(){ sheet({title:'Apagar todos os dados?',body:'Cafés, preparos e avaliações deste aparelho serão apagados. Faça um backup antes, se quiser guardar.',actions:[{label:'Apagar tudo',fn:()=>{ db=seed(); db.beans=[]; save(true); DN=null; lsDel(DKEY); toast('Dados apagados'); render(); }},{label:'Cancelar',kind:'quiet'}]}); },
+};
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]'); if(!el) return;
+  const fn=ACT[el.dataset.act]; if(!fn) return;
+  const r=fn(el,e); if(r!=='pass') e.preventDefault();
+});
+document.addEventListener('input',e=>{
+  const el=e.target, sc=el.closest('[data-scope]'); if(!sc) return;
+  const scope=sc.dataset.scope;
+  if(scope==='E'){ const f=el.dataset.f; if(!f) return; E[f]=el.type==='range'?Number(el.value):el.value; if(f==='nota') $('#notaOut').textContent=fmt(E.nota); return; }
+  if(scope!=='D'||!D) return;
+  if(el.dataset.pi!=null){ if(el.dataset.pk==='g'){ D.pours[+el.dataset.pi].g=num(el.value); saveDraft(); const s=$('#tSub'); if(s&&D.timer.start&&!D.timer.end) s.innerHTML=lcdSub(); } return; }
+  const f=el.dataset.f; if(!f||el.dataset.time) return;
+  if(f==='ratio'){ const r=num(el.value), c=num(D.cafe); if(r&&c){ D.aguaG=String(Math.round(c*r)); const a=$('[data-scope="D"] input[data-f="aguaG"]'); a.value=D.aguaG; } saveDraft(); return; }
+  D[f]=el.type==='checkbox'?el.checked:el.value;
+  if(f==='cafe'||f==='aguaG'){ const r=ratioOf(num(D.cafe),num(D.aguaG)); const ri=$('[data-scope="D"] input[data-f="ratio"]'); if(ri&&document.activeElement!==ri) ri.value=r?fmt(r):''; }
+  if(['tds','bebida','cafe','aguaG'].includes(f)) $('#eyLine').innerHTML=eyLine(D);
+  saveDraft();
+});
+document.addEventListener('change',e=>{
+  const el=e.target, sc=el.closest('[data-scope]');
+  if(el.id==='fileIn') return importFile(el.files[0]);
+  if(!sc||sc.dataset.scope!=='D'||!D) return;
+  if(el.dataset.pi!=null&&el.dataset.pk==='t'){ const t=parseT(el.value); D.pours[+el.dataset.pi].t=t; el.value=t!=null?fmtT(t):''; saveDraft(); return; }
+  const f=el.dataset.f;
+  if(f==='tempoTotal'){ const t=parseT(el.value); D.tempoTotal=t; el.value=t!=null?fmtT(t):''; saveDraft(); return; }
+  if(f==='enxague'){ D.enxague=el.checked; saveDraft(); return; }
+  if(f==='beanId'){ D.beanId=el.value; saveDraft(); $('#beanCard').innerHTML=beanCard(beanById(D.beanId),D.when?new Date(D.when).getTime():Date.now()); return; }
+  if(f==='filtro'||f==='when'){ D[f]=el.value; saveDraft(); if(f==='when') $('#beanCard').innerHTML=beanCard(beanById(D.beanId),D.when?new Date(D.when).getTime():Date.now()); }
+});
+
+function saveBrew(){
+  if(!D) return;
+  if(!D.beanId){ toast('Escolha o café antes de salvar'); $('[data-f="beanId"]').focus(); return; }
+  if(!num(D.cafe)||!num(D.aguaG)){ toast('Informe a quantidade de café e de água'); $('[data-f="cafe"]').focus(); return; }
+  if(D.timer.start&&!D.timer.end) ACT.tStop();
+  const bean=beanById(D.beanId);
+  const when=D.when?new Date(D.when).getTime():(D.timer.start||Date.now());
+  const fields=['beanId','estadoGrao','sessao','codigo','moedor','clique','orientacao','metodo','filtro','enxague','agua','ppm','temp','cafe','aguaG','agitacao','tempoTotal','bebida','tds','notas'];
+  const rec={}; fields.forEach(k=>rec[k]=D[k]);
+  rec.pours=(D.pours||[]).filter(p=>p.t!=null||p.g!=null).map(p=>({t:p.t,g:p.g}));
+  rec.bean=snap(bean);
+  let id;
+  if(D.mode==='edit'){ const ex=brewById(D.editId); Object.assign(ex,rec,{criadoEm:when,editadoEm:Date.now()}); id=ex.id; }
+  else { id=uid(); db.brews.push(Object.assign({id,criadoEm:when},rec)); if(bean&&bean.status!=='Acabou'&&bean.status!=='Em uso') bean.status='Em uso'; }
+  ['moedor','metodo','filtro'].forEach(k=>{ const L=db.lists[k==='moedor'?'moedores':k==='metodo'?'metodos':'filtros']; if(rec[k]&&!L.includes(rec[k])) L.push(rec[k]); });
+  if(rec.agua&&!db.lists.aguas.includes(rec.agua)) db.lists.aguas.push(rec.agua);
+  if(rec.sessao&&!db.lists.sessoes.includes(rec.sessao)) db.lists.sessoes.push(rec.sessao);
+  const msg=D.mode==='edit'?'Alterações salvas':'Preparo salvo';
+  save(); keepAwake(false); clearDraft();
+  toast(msg);
+  location.replace('#/preparo/'+id);
+}
+function saveEval(){
+  if(!E) return;
+  const rec={}; ['momento','extracao','nota','percebidas','comentario','ajuste',...ATTR.map(a=>a[0])].forEach(k=>rec[k]=E[k]);
+  if(E.id){ Object.assign(db.evals.find(x=>x.id===E.id),rec,{editadoEm:Date.now()}); }
+  else db.evals.push(Object.assign({id:uid(),brewId:E.brewId,criadoEm:Date.now()},rec));
+  const bid=E.brewId; save(); E=null; toast('Avaliação salva'); location.replace('#/preparo/'+bid);
+}
+function saveBean(ev){
+  ev.preventDefault();
+  const f=ev.target, fd=new FormData(f), id=f.dataset.id, volta=f.dataset.volta;
+  const o={}; for(const [k,v] of fd.entries()) o[k]=String(v).trim();
+  if(!o.nome){ toast('Dê um nome ao café'); return; }
+  o.peso=num(o.peso);
+  let b;
+  if(id){ b=beanById(id); Object.assign(b,o); db.brews.filter(x=>x.beanId===id).forEach(x=>x.bean=snap(b)); }
+  else { b=Object.assign({id:uid(),criadoEm:Date.now()},o); db.beans.push(b); }
+  save();
+  if(volta==='novo'&&DN){ DN.beanId=b.id; lsSet(DKEY,JSON.stringify(DN)); }
+  if(volta.startsWith('editar/')&&DE) DE.beanId=b.id;
+  toast(id?'Café atualizado':'Café cadastrado');
+  location.replace(volta?'#/'+volta:'#/cafe/'+b.id);
+}
+
+/* ================= exportar / importar ================= */
+function canShareFiles(){ try{ return !!(navigator.canShare&&navigator.canShare({files:[new File(['{}'],'x.json',{type:'application/json'})]})); }catch(e){ return false; } }
+async function deliver(name,mime,text,share){
+  const blob=new Blob([text],{type:mime});
+  if(share){ try{ await navigator.share({files:[new File([blob],name,{type:mime})],title:name}); return true; }catch(e){ if(e&&e.name==='AbortError') return false; } }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); return true;
+}
+async function exportJSON(share){
+  const data={app:APP,versao:1,exportadoEm:new Date().toISOString(),beans:db.beans,brews:db.brews,evals:db.evals,lists:db.lists};
+  const ok=await deliver(`${APP}-backup-${localISODate()}.json`,'application/json',JSON.stringify(data,null,1),share);
+  if(ok){ db.prefs.lastBackup=Date.now(); db.prefs.changes=0; save(true); toast(share?'Backup compartilhado':'Backup salvo em Downloads'); if(curRoute==='list'||location.hash.includes('mais')) render(); }
+}
+const csvCell=v=>{ if(v==null) return ''; const s=String(v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+function exportCSV(kind){
+  let rows;
+  if(kind==='brews'){
+    const H=['id','data_hora','sessao','codigo_cego','cafe','torrefacao','produtor','regiao','variedade','processo','torra','data_torra','dias_descanso','estado_grao','moedor','clique','orientacao','metodo','filtro','filtro_enxaguado','agua','agua_ppm','temperatura_c','cafe_g','agua_g','proporcao','agitacao','n_despejos','bloom_g','bloom_s','despejos','tempo_total_s','bebida_g','tds_pct','extracao_pct','extracao_estimada','obs_preparo','n_avaliacoes','nota_geral_media','nota_geral_ultima','extracao_ultima',...ATTR.map(a=>a[0]),'notas_percebidas','proximo_ajuste'];
+    rows=[H].concat([...db.brews].sort((a,b)=>a.criadoEm-b.criadoEm).map(b=>{
+      const bean=beanOf(b), evs=evalsOf(b.id), le=evs[evs.length-1]||{}, P=b.pours||[], e=ey(b), notas=evs.filter(x=>x.nota!=null).map(x=>x.nota);
+      return [b.id,toLocalInput(b.criadoEm).replace('T',' '),b.sessao,b.codigo,bean.nome,bean.torrefacao,bean.produtor,bean.regiao,bean.variedade,bean.processo,bean.torra,bean.dataTorra,daysOff(bean.dataTorra,b.criadoEm),b.estadoGrao,b.moedor,b.clique,b.orientacao,b.metodo,b.filtro,b.enxague?1:0,b.agua,num(b.ppm),num(b.temp),num(b.cafe),num(b.aguaG),(()=>{const r=ratioOf(num(b.cafe),num(b.aguaG));return r?Math.round(r*100)/100:null;})(),b.agitacao,P.length,P[0]?P[0].g:null,P[1]?P[1].t:null,P.map(p=>`${p.t!=null?fmtT(p.t):''}@${p.g!=null?p.g:''}`).join('|'),b.tempoTotal,num(b.bebida),num(b.tds),e?Math.round(e.v*100)/100:null,e?(e.est?1:0):null,b.notas,evs.length,notas.length?Math.round(notas.reduce((s,x)=>s+x,0)/notas.length*100)/100:null,le.nota,le.extracao,...ATTR.map(a=>le[a[0]]),le.percebidas,le.ajuste];
+    }));
+  } else {
+    const H=['id','preparo_id','data_hora','cafe','momento','extracao','extracao_rotulo','nota_geral',...ATTR.map(a=>a[0]),'notas_percebidas','comentario','proximo_ajuste'];
+    rows=[H].concat([...db.evals].sort((a,b)=>a.criadoEm-b.criadoEm).map(x=>{ const b=brewById(x.brewId)||{}; return [x.id,x.brewId,toLocalInput(x.criadoEm).replace('T',' '),b.beanId?beanOf(b).nome:'',x.momento,x.extracao,x.extracao!=null?XLAB[x.extracao]:'',x.nota,...ATTR.map(a=>x[a[0]]),x.percebidas,x.comentario,x.ajuste]; }));
+  }
+  const text='﻿'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
+  deliver(`${APP}-${kind==='brews'?'preparos':'avaliacoes'}-${localISODate()}.csv`,'text/csv',text,false).then(ok=>ok&&toast('Planilha salva em Downloads'));
+}
+function importFile(file){
+  if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d; try{ d=JSON.parse(rd.result); }catch(e){ toast('Arquivo inválido: não é um backup .json'); return; }
+    if(!d||!Array.isArray(d.brews)||!Array.isArray(d.beans)){ toast('Este arquivo não é um backup do Caderno de Preparos'); return; }
+    const info=`Backup ${d.exportadoEm?'de '+new Date(d.exportadoEm).toLocaleDateString('pt-BR'):''} com ${d.beans.length} cafés, ${d.brews.length} preparos e ${(d.evals||[]).length} avaliações.`;
+    sheet({title:'Importar backup',body:esc(info)+' Mesclar mantém o que já está aqui e acrescenta o que falta. Substituir apaga os dados atuais.',actions:[
+      {label:'Mesclar com os dados atuais',fn:()=>{ const m=(a,b)=>{ const map=new Map(a.map(x=>[x.id,x])); (b||[]).forEach(x=>map.set(x.id,x)); return [...map.values()]; };
+        const key=b=>((b.nome||'')+'|'+(b.torrefacao||'')).trim().toLowerCase(), byId=new Map(db.beans.map(b=>[b.id,b])), byKey=new Map(db.beans.map(b=>[key(b),b])), remap={};
+        d.beans.forEach(b=>{ if(byId.has(b.id)) Object.assign(byId.get(b.id),b); else if(byKey.has(key(b))) remap[b.id]=byKey.get(key(b)).id; else { db.beans.push(b); byId.set(b.id,b); byKey.set(key(b),b); } });
+        db.brews=m(db.brews,d.brews.map(x=>remap[x.beanId]?Object.assign({},x,{beanId:remap[x.beanId]}):x)); db.evals=m(db.evals,d.evals); if(d.lists) Object.keys(d.lists).forEach(k=>{ db.lists[k]=[...new Set([...(db.lists[k]||[]),...d.lists[k]])]; }); save(); toast('Backup mesclado'); render(); }},
+      {label:'Substituir tudo',kind:'ghost',fn:()=>{ db=migrate({beans:d.beans,brews:d.brews,evals:d.evals||[],lists:d.lists,prefs:db.prefs}); save(); toast('Backup restaurado'); render(); }},
+      {label:'Cancelar',kind:'quiet'}]});
+  };
+  rd.readAsText(file);
+}
+
+/* ================= início ================= */
+if(navigator.storage&&navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();
+</script>
+</body>
+</html>

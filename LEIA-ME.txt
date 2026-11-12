@@ -1,0 +1,19 @@
+Caderno de Preparos (app offline para Android)
+
+Jeito rápido
+  Abra o index.html no Chrome do celular. Se o app avisar que "este modo de abertura não salva dados",
+  use o jeito recomendado abaixo (ou exporte o backup sempre antes de fechar).
+
+Jeito recomendado (vira um app com ícone, 100% offline depois de instalado)
+  1. Publique esta pasta inteira em qualquer endereço HTTPS (ex.: GitHub Pages).
+  2. Abra o endereço uma vez no Chrome do Android e toque em "Instalar app".
+  3. Pronto: abre pelo ícone, funciona sem internet e os dados ficam só no aparelho.
+
+Backup
+  Mais > Baixar backup gera um .json com tudo. Importar backup restaura ou mescla.
+  Mais > Preparos em CSV / Avaliações em CSV exporta para análise.
+
+Seus cafés
+  O app começa vazio. Para carregar a sua lista, abra Mais > Importar backup, escolha o arquivo
+  caderno-preparos-meus-cafes.json e toque em "Mesclar com os dados atuais".
+  Esse arquivo não faz parte da pasta publicada: guarde-o só com você.
